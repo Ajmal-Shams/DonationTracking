@@ -1,0 +1,35 @@
+<%-- Document : donationApprove Created on : Nov 21, 2022, 2:20:38 PM Author : Murthi --%>
+
+    <%@page import="java.sql.ResultSet" %>
+        <%@page import="java.sql.Statement" %>
+            <%@page import="DonationTracking.SQLconnection" %>
+                <%@page import="java.sql.Connection" %>
+                    <%@page contentType="text/html" pageEncoding="UTF-8" %>
+                        <%@page import="java.util.Date" %>
+                            <%@page import="java.text.SimpleDateFormat" %>
+                                <% String tid=request.getParameter("tid"); String cid=request.getParameter("cid");
+                                    String amount=request.getParameter("amount"); // Capture user and time String
+                                    acceptedBy="Unknown" ; if (session.getAttribute("superadmin_name") !=null) {
+                                    acceptedBy=(String) session.getAttribute("superadmin_name") + " (Super Admin)" ; }
+                                    else if (session.getAttribute("admin_name") !=null) { acceptedBy=(String)
+                                    session.getAttribute("admin_name") + " (Panchayat Admin)" ; } SimpleDateFormat
+                                    sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); String acceptedTime=sdf.format(new
+                                    Date()); Connection con=SQLconnection.getconnection(); Statement
+                                    st=con.createStatement(); Statement st1=con.createStatement(); Statement
+                                    st2=con.createStatement(); try { ResultSet rs=st.executeQuery("Select * from
+                                    campaign where id='" + cid + "'");
+        if (rs.next()) {
+            int preValue = rs.getInt(" AmountCol"); int totalValve=preValue + Integer.parseInt(amount); // Update
+                                    Campaign Amount int i=st1.executeUpdate("update campaign set
+                                    AmountCol='" + totalValve + "' where id='" + cid + "'");
+            
+            // Update Transaction Status
+            String updateQuery = " update transaction set donationStatus='Approved' , accepted_by='" + acceptedBy + "'
+                                    , accepted_time='" + acceptedTime + "' where Tid='" + tid + "'";
+            int j = st2.executeUpdate(updateQuery);
+            
+            if (i != 0) {
+                response.sendRedirect(" Donations_Details.jsp?Granted"); } else {
+                                    response.sendRedirect("Donations_Details.jsp?Failed"); } } else {
+                                    response.sendRedirect("Donations_Details.jsp?Failed=CampaignNotFound"); } } catch
+                                    (Exception ex) { ex.printStackTrace(); } %>
