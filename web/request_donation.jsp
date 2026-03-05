@@ -19,12 +19,14 @@
             , "SELECT\u0020COUNT(*)\u0020AS\u0020t,MAX(reqTime)\u0020AS\u0020l\u0020FROM\u0020donation_req\u0020WHERE\u0020cid='"
             , "'\u0020AND\u0020did='" , "'" , "yyyy/MM/dd\u0020HH:mm:ss" , "Ready" , "Wait" , "m" , "green" , "orange"
             , "N" , "Y" , "cid" , "Sent" , "Cooldown" , "id" , "nm" , "Name" , "Mailid" , "Phone" , "ml" , "ph" , "ms"
-            , "cl" , "lk" , "t" , "l" , "Error:\u0020" , "campName" , "Amount" , "AmountCol" }; String ci=(String)
-            session.getAttribute(h[36]); java.sql.Connection cn=null; java.util.List dn=new java.util.ArrayList();
+            , "cl" , "lk" , "t" , "l" , "Error:\u0020" , "campName" , "Amount" , "AmountCol" }; Object
+            ciObj=session.getAttribute(h[36]); if (ciObj==null) { response.sendRedirect("Charity.jsp"); return; } String
+            ci=ciObj.toString(); java.sql.Connection cn=null; java.util.List dn=new java.util.ArrayList();
             java.util.List cp=new java.util.ArrayList(); String sk=request.getParameter(h[37]); String
             sc=request.getParameter(h[38]); cn=SQLconnection.getconnection(); if (cn !=null) { java.sql.Statement
-            s1=cn.createStatement(); java.sql.ResultSet r1=s1.executeQuery(h[22] + ci + h[23]); while (r1.next()) { int
-            tot=r1.getInt(h[53]); int col=r1.getInt(h[54]); if (tot>0 && col>=tot)
+            s1=cn.createStatement(); java.sql.ResultSet r1=s1.executeQuery(h[22] + ci + h[23]); while (r1.next()) {
+            double tot=0; double col=0; try { tot=Double.parseDouble(r1.getString(h[53])); } catch(Exception e){} try {
+            col=Double.parseDouble(r1.getString(h[54])); } catch(Exception e){} if (tot>0 && col>=tot)
             continue;
             java.util.Map m=new java.util.HashMap();
             m.put(h[39], r1.getString(h[39])); m.put(h[40], r1.getString(h[52])); cp.add(m); }

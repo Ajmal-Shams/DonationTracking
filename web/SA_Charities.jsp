@@ -6,11 +6,13 @@
                     con=SQLconnection.getconnection(); if (con !=null) { Statement st=con.createStatement(); String
                     sql="SELECT c.*, p.panchayat_name FROM charity_reg c "
                     + "LEFT JOIN panchayat p ON c.panchayat_id = p.id " + "ORDER BY c.id DESC" ; ResultSet
-                    rs=st.executeQuery(sql); while (rs.next()) { String[] r=new String[7]; r[0]=rs.getString("id");
+                    rs=st.executeQuery(sql); while (rs.next()) { String[] r=new String[9]; r[0]=rs.getString("id");
                     r[1]=rs.getString("CName"); r[2]=rs.getString("CMailid"); r[3]=rs.getString("CPhone");
                     r[4]=rs.getString("Caddress"); r[5]=rs.getString("panchayat_name"); if (r[5]==null) r[5]="N/A" ;
-                    r[6]=rs.getString("CTor"); rows.add(r); } } } catch (Exception ex) { ex.printStackTrace();
-                    errMsg=ex.getMessage(); } %>
+                    r[6]=rs.getString("CTor"); try { r[7]=rs.getString("min_donation") + " (" +
+                    rs.getString("min_donation_type") + ")" ; r[8]=rs.getString("max_donation") + " (" +
+                    rs.getString("max_donation_type") + ")" ; } catch(Exception e2) { r[7]="N/A" ; r[8]="N/A" ; }
+                    rows.add(r); } } } catch (Exception ex) { ex.printStackTrace(); errMsg=ex.getMessage(); } %>
                     <!DOCTYPE html>
                     <html class="no-js">
 
@@ -91,6 +93,8 @@
                                                         <th>Phone</th>
                                                         <th>Address</th>
                                                         <th>Panchayat</th>
+                                                        <th>Min Limit</th>
+                                                        <th>Max Limit</th>
                                                         <th>Registered Date</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -124,6 +128,12 @@
                                                                         </td>
                                                                         <td>
                                                                             <%=r[5]%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%=r[7]%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%=r[8]%>
                                                                         </td>
                                                                         <td>
                                                                             <%=r[6]%>

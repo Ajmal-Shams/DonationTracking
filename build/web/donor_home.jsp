@@ -1,242 +1,254 @@
-<%-- 
-    Document   : donor_home
-    Created on : Nov 18, 2022, 1:14:22 PM
-    Author     : Murthi
---%>
+<%-- Document : donor_home Created on : Nov 18, 2022, 1:14:22 PM Author : Murthi --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html class="no-js">
-    <head>
-        <meta charset="utf-8">
-        <title>DONATION TRACKING SYSTEM</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Fonts -->
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
+    <%@page contentType="text/html" pageEncoding="UTF-8" %>
+        <!DOCTYPE html>
+        <html class="no-js">
 
-        <!-- Bootsrap -->
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <head>
+            <meta charset="utf-8">
+            <title>DONATION TRACKING SYSTEM</title>
+            <meta name="description" content="">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <!-- Fonts -->
+            <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+            <link href='http://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
 
-        <!-- Font awesome -->
-        <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+            <!-- Bootsrap -->
+            <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
-        <!-- Owl carousel -->
-        <link rel="stylesheet" href="assets/css/owl.carousel.css">
+            <!-- Font awesome -->
+            <link rel="stylesheet" href="assets/css/font-awesome.min.css">
 
-        <!-- Template main Css -->
-        <link rel="stylesheet" href="assets/css/style.css">
+            <!-- Owl carousel -->
+            <link rel="stylesheet" href="assets/css/owl.carousel.css">
 
-        <!-- Modernizr -->
-        <script src="assets/js/modernizr-2.6.2.min.js"></script>
+            <!-- Template main Css -->
+            <link rel="stylesheet" href="assets/css/style.css">
 
+            <!-- Modernizr -->
+            <script src="assets/js/modernizr-2.6.2.min.js"></script>
 
-    </head>
-    
-                    <%
-        if (request.getParameter("Success") != null) {%>
-    <script>alert('Login Success ');</script>  
-    <%}
-    %>
-                    <%
-        if (request.getParameter("PaymentDone") != null) {%>
-    <script>alert('Payment Success. Thank you for the donation');</script>  
-    <%}
-    %>
 
-    <body>
+        </head>
 
+        <% if (request.getParameter("Success") !=null) {%>
+            <script>alert('Login Success ');</script>
+            <%} %>
 
-        <header class="main-header">
+                <body>
 
+                    <% if (request.getParameter("PaymentDone") !=null) {%>
+                        <div class="alert alert-success text-center" style="margin:0;font-size:18px;"><strong>Payment
+                                Successful!</strong> Thank you for your generous donation.</div>
+                        <%} %>
+                            <% if (request.getParameter("PaymentFailed") !=null) {%>
+                                <div class="alert alert-danger text-center" style="margin:0;font-size:18px;">
+                                    <strong>Payment Failed!</strong> Something went wrong. Please try again.</div>
+                                <%} %>
 
-            <nav class="navbar navbar-static-top">
 
-                <div class="navbar-top">
+                                    <header class="main-header">
 
-                    <div class="container">
-                        <div class="row">
 
-                            <div class="col-sm-6 col-xs-12">
+                                        <nav class="navbar navbar-static-top">
 
-                                <ul class="list-unstyled list-inline header-contact">
-                                    <li> <i class="fa fa-phone"></i> <a href="tel:">+61 123456789 </a> </li>
-                                    <li> <i class="fa fa-envelope"></i> <a href="#">contact@DONATION.org</a> </li>
-                                </ul> <!-- /.header-contact  -->
+                                            <div class="navbar-top">
 
-                            </div>
+                                                <div class="container">
+                                                    <div class="row">
 
-                            <div class="col-sm-6 col-xs-12 text-right">
+                                                        <div class="col-sm-6 col-xs-12">
 
-                                <ul class="list-unstyled list-inline header-social">
+                                                            <ul class="list-unstyled list-inline header-contact">
+                                                                <li> <i class="fa fa-phone"></i> <a href="tel:">+61
+                                                                        123456789 </a> </li>
+                                                                <li> <i class="fa fa-envelope"></i> <a
+                                                                        href="#">contact@DONATION.org</a> </li>
+                                                            </ul> <!-- /.header-contact  -->
 
-                                    <li> <a href="#"> <i class="fa fa-facebook"></i> </a> </li>
-                                    <li> <a href="#"> <i class="fa fa-twitter"></i>  </a> </li>
-                                    <li> <a href="#"> <i class="fa fa-google"></i>  </a> </li>
-                                    <li> <a href="#"> <i class="fa fa-youtube"></i>  </a> </li>
-                                    <li> <a href="#"> <i class="fa fa fa-pinterest-p"></i>  </a> </li>
-                                </ul> <!-- /.header-social  -->
+                                                        </div>
 
-                            </div>
+                                                        <div class="col-sm-6 col-xs-12 text-right">
 
+                                                            <ul class="list-unstyled list-inline header-social">
 
-                        </div>
-                    </div>
+                                                                <li> <a href="#"> <i class="fa fa-facebook"></i> </a>
+                                                                </li>
+                                                                <li> <a href="#"> <i class="fa fa-twitter"></i> </a>
+                                                                </li>
+                                                                <li> <a href="#"> <i class="fa fa-google"></i> </a>
+                                                                </li>
+                                                                <li> <a href="#"> <i class="fa fa-youtube"></i> </a>
+                                                                </li>
+                                                                <li> <a href="#"> <i class="fa fa fa-pinterest-p"></i>
+                                                                    </a> </li>
+                                                            </ul> <!-- /.header-social  -->
 
-                </div>
+                                                        </div>
 
-                <div class="navbar-main">
 
-                    <div class="container">
+                                                    </div>
+                                                </div>
 
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                            </div>
 
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
+                                            <div class="navbar-main">
 
-                            </button>
+                                                <div class="container">
 
-                            <a class="navbar-brand" href="donor_home.jsp">DONATION TRACKING SYSTEM</a>
+                                                    <div class="navbar-header">
+                                                        <button type="button" class="navbar-toggle collapsed"
+                                                            data-toggle="collapse" data-target="#navbar"
+                                                            aria-expanded="false" aria-controls="navbar">
 
-                        </div>
+                                                            <span class="sr-only">Toggle navigation</span>
+                                                            <span class="icon-bar"></span>
+                                                            <span class="icon-bar"></span>
+                                                            <span class="icon-bar"></span>
 
-                        <div id="navbar" class="navbar-collapse collapse pull-right">
+                                                        </button>
 
-                            <ul class="nav navbar-nav">
+                                                        <a class="navbar-brand" href="donor_home.jsp">DONATION TRACKING
+                                                            SYSTEM</a>
 
-                                <li><a class="is-active" href="donor_home.jsp">HOME</a></li>
-                                <li><a href="Donate.jsp">Donate</a></li>
-                                <li><a href="Dreqest.jsp">Donation Request</a></li>
-                                <li><a href="Donation_Status.jsp">Track Donation</a></li>
-                                <li><a href="DTransactions.jsp">Transactions</a></li>
-                                <li><a href="logout.jsp">Logout</a></li>
+                                                    </div>
 
-                            </ul>
+                                                    <div id="navbar" class="navbar-collapse collapse pull-right">
 
-                        </div> <!-- /#navbar -->
+                                                        <ul class="nav navbar-nav">
 
-                    </div> <!-- /.container -->
+                                                            <li><a class="is-active" href="donor_home.jsp">HOME</a></li>
+                                                            <li><a href="Donate.jsp">Donate</a></li>
+                                                            <li><a href="Dreqest.jsp">Donation Request</a></li>
+                                                            <li><a href="Donation_Status.jsp">Track Donation</a></li>
+                                                            <li><a href="DTransactions.jsp">Transactions</a></li>
+                                                            <li><a href="logout.jsp">Logout</a></li>
 
-                </div> <!-- /.navbar-main -->
+                                                        </ul>
 
+                                                    </div> <!-- /#navbar -->
 
-            </nav> 
+                                                </div> <!-- /.container -->
 
-        </header> <!-- /. main-header -->
+                                            </div> <!-- /.navbar-main -->
 
-        <div class="page-heading text-center">
 
-		<div class="container ">
-			
-			<h1 class="page-title">Donor Home <span class="title-under"></span></h1>
-			<p class="page-description">
-			</p>
-			
-		</div>
+                                        </nav>
 
-	</div>
+                                    </header> <!-- /. main-header -->
 
-	<div class="main-container">
+                                    <div class="page-heading text-center">
 
-		<div class="container">
+                                        <div class="container ">
 
-			<div class="row  animated">
+                                            <h1 class="page-title">Donor Home <span class="title-under"></span></h1>
+                                            <p class="page-description">
+                                            </p>
 
-				<div class="col-md-12">
+                                        </div>
 
-                                    <img src="assets/images/admin.jpg" alt="" class="img-responsive">
+                                    </div>
 
-				</div>
+                                    <div class="main-container">
 
-			</div> <!-- /.row -->
-                </div>
-        </div>
+                                        <div class="container">
 
+                                            <div class="row  animated">
 
-        <footer class="main-footer">
+                                                <div class="col-md-12">
 
-            <div class="footer-top">
+                                                    <img src="assets/images/admin.jpg" alt="" class="img-responsive">
 
-            </div>
+                                                </div>
 
+                                            </div> <!-- /.row -->
+                                        </div>
+                                    </div>
 
-            <div class="footer-main">
-                <div class="container">
 
-                    <div class="row">
-                        <div class="col-md-4">
+                                    <footer class="main-footer">
 
-                            <div class="footer-col">
+                                        <div class="footer-top">
 
-                                <h4 class="footer-title">About us <span class="title-under"></span></h4>
+                                        </div>
 
-                                <div class="footer-content">
 
-                                    <p>
-                                        The aim of this project is to develop a system to track donation. The users are admin , donor
-                                        and charity. This system helps the donors to track their donation. This system consisted 5
-                                        modules. Besides that, this system also helps the charity request for donation. Meanwhile, the
-                                        admin will manage the charity and donors.
-                                    </p> 
-                                </div>
+                                        <div class="footer-main">
+                                            <div class="container">
 
-                            </div>
+                                                <div class="row">
+                                                    <div class="col-md-4">
 
-                        </div>
+                                                        <div class="footer-col">
 
-                        <div class="col-md-4">
+                                                            <h4 class="footer-title">About us <span
+                                                                    class="title-under"></span></h4>
 
-                        </div>
+                                                            <div class="footer-content">
 
+                                                                <p>
+                                                                    The aim of this project is to develop a system to
+                                                                    track donation. The users are admin , donor
+                                                                    and charity. This system helps the donors to track
+                                                                    their donation. This system consisted 5
+                                                                    modules. Besides that, this system also helps the
+                                                                    charity request for donation. Meanwhile, the
+                                                                    admin will manage the charity and donors.
+                                                                </p>
+                                                            </div>
 
-                        <div class="col-md-4">
+                                                        </div>
 
-                            <div class="footer-col">
+                                                    </div>
 
+                                                    <div class="col-md-4">
 
-                                <div class="footer-content">
-                                </div>
+                                                    </div>
 
-                            </div>
 
-                        </div>
-                        <div class="clearfix"></div>
+                                                    <div class="col-md-4">
 
+                                                        <div class="footer-col">
 
 
-                    </div>
+                                                            <div class="footer-content">
+                                                            </div>
 
+                                                        </div>
 
-                </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
 
 
-            </div>
 
-            <div class="footer-bottom">
+                                                </div>
 
-                <div class="container text-right">
-                    DONATION TRACKING SYSTEM
-                </div>
-            </div>
 
-        </footer> <!-- main-footer -->
+                                            </div>
 
-        <!-- jQuery -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="assets/js/jquery-1.11.1.min.js"><\/script>')</script>
 
-        <!-- Bootsrap javascript file -->
-        <script src="assets/js/bootstrap.min.js"></script>
+                                        </div>
 
+                                        <div class="footer-bottom">
 
+                                            <div class="container text-right">
+                                                DONATION TRACKING SYSTEM
+                                            </div>
+                                        </div>
 
-        <!-- Template main javascript -->
-        <script src="assets/js/main.js"></script>
-    </body>
-</html>
+                                    </footer> <!-- main-footer -->
 
+                                    <!-- jQuery -->
+                                    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                                    <script>window.jQuery || document.write('<script src="assets/js/jquery-1.11.1.min.js"><\/script>')</script>
 
+                                    <!-- Bootsrap javascript file -->
+                                    <script src="assets/js/bootstrap.min.js"></script>
+
+
+
+                                    <!-- Template main javascript -->
+                                    <script src="assets/js/main.js"></script>
+                </body>
+
+        </html>

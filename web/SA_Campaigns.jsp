@@ -11,11 +11,13 @@
                     rows=new ArrayList(); String errMsg=null; java.sql.Connection con=null; try {
                     con=DonationTracking.SQLconnection.getconnection(); if (con !=null) { java.sql.Statement
                     st=con.createStatement(); java.sql.ResultSet rs=st.executeQuery(h[11] + h[12] + h[13]); while
-                    (rs.next()) { String[] r=new String[10]; r[0]=rs.getString(h[0]); r[1]=rs.getString(h[1]);
+                    (rs.next()) { String[] r=new String[12]; r[0]=rs.getString(h[0]); r[1]=rs.getString(h[1]);
                     r[2]=rs.getString(h[2]); r[3]=rs.getString(h[3]); r[4]=rs.getString(h[4]); r[5]=rs.getString(h[5]);
                     r[6]=rs.getString(h[6]); r[7]=rs.getString(h[7]); if (r[7]==null) r[7]=h[10];
-                    r[8]=rs.getString(h[8]); r[9]=rs.getString(h[9]); rows.add(r); } } } catch (Exception ex) {
-                    ex.printStackTrace(); errMsg=ex.getMessage(); } %>
+                    r[8]=rs.getString(h[8]); r[9]=rs.getString(h[9]); try { r[10]=rs.getString("min_donation") + " (" +
+                    rs.getString("min_donation_type") + ")" ; r[11]=rs.getString("max_donation") + " (" +
+                    rs.getString("max_donation_type") + ")" ; } catch(Exception e2) { r[10]=h[10]; r[11]=h[10]; }
+                    rows.add(r); } } } catch (Exception ex) { ex.printStackTrace(); errMsg=ex.getMessage(); } %>
                     <!DOCTYPE html>
                     <html class="no-js">
 
@@ -97,6 +99,8 @@
                                                         <th>Collected</th>
                                                         <th>Status</th>
                                                         <th>Charity</th>
+                                                        <th>Min Limit</th>
+                                                        <th>Max Limit</th>
                                                         <th>Panchayat</th>
                                                         <th>Start Date</th>
                                                         <th>End Date</th>
@@ -145,6 +149,12 @@
                                                                         </td>
                                                                         <td>
                                                                             <%=r[6]%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%=r[10]%>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%=r[11]%>
                                                                         </td>
                                                                         <td>
                                                                             <%=r[7]%>

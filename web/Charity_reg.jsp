@@ -132,6 +132,34 @@
                                                 </div>
                                             </div>
                                             <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Default Min Donation Per User</label>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="min_donation" placeholder="Min (Optional)">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Type</label>
+                                                    <select class="form-control" name="min_donation_type">
+                                                        <option value="Number">Fixed Amount ($)</option>
+                                                        <option value="Percentage">Percentage of Goal (%)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Default Max Donation Per User</label>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="max_donation" placeholder="Max (Optional)">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Type</label>
+                                                    <select class="form-control" name="max_donation_type">
+                                                        <option value="Number">Fixed Amount ($)</option>
+                                                        <option value="Percentage">Percentage of Goal (%)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <input type="password" class="form-control" name="pass"
                                                         placeholder="Password*" required="">

@@ -51,8 +51,14 @@ public class donate extends HttpServlet {
                 String charity_id = request.getParameter("charity_id");
                 String campaign_id = request.getParameter("campaign_id");
 
-                String did = user.getAttribute("did").toString();
-                String dname = user.getAttribute("dname").toString();
+                Object didObj = user.getAttribute("did");
+                Object dnameObj = user.getAttribute("dname");
+                if (didObj == null || dnameObj == null) {
+                    response.sendRedirect("donor_log.jsp");
+                    return;
+                }
+                String did = didObj.toString();
+                String dname = dnameObj.toString();
                 Integer panchayatId = (Integer) user.getAttribute("panchayat_id");
 
                 Random RANDOM = new SecureRandom();
@@ -70,8 +76,68 @@ public class donate extends HttpServlet {
                 String time = dateFormat.format(date);
                 System.out.println("current Date " + time);
                 Connection conn = SQLconnection.getconnection();
-                Statement st = conn.createStatement();
-                Statement st1 = conn.createStatement();
+
+                // Fetch limits
+                double donateAmount = Double.parseDouble(amount);
+                try {
+                    double campaignGoal = 0;
+                    double collected = 0;
+                    double cMin = 0, cMax = 0;
+                    String cMinType = "Number", cMaxType = "Number";
+                    double chMin = 0, chMax = 0;
+                    String chMinType = "Number", chMaxType = "Number";
+
+                    Statement stLimits = conn.createStatement();
+                    ResultSet rsLimits = stLimits.executeQuery(
+                            "SELECT c.Amount, c.AmountCol, c.min_donation AS camp_min, c.max_donation AS camp_max, c.min_donation_type AS camp_min_type, c.max_donation_type AS camp_max_type, cr.min_donation AS char_min, cr.max_donation AS char_max, cr.min_donation_type AS char_min_type, cr.max_donation_type AS char_max_type FROM campaign c JOIN charity_reg cr ON c.cid = cr.id WHERE c.id='"
+                                    + campaign_id + "'");
+                    if (rsLimits.next()) {
+                        campaignGoal = rsLimits.getDouble("Amount");
+                        collected = rsLimits.getDouble("AmountCol");
+                        cMin = rsLimits.getDouble("camp_min");
+                        cMax = rsLimits.getDouble("camp_max");
+                        cMinType = rsLimits.getString("camp_min_type");
+                        cMaxType = rsLimits.getString("camp_max_type");
+                        chMin = rsLimits.getDouble("char_min");
+                        chMax = rsLimits.getDouble("char_max");
+                        chMinType = rsLimits.getString("char_min_type");
+                        chMaxType = rsLimits.getString("char_max_type");
+                    }
+
+                    double remaining = campaignGoal - collected;
+                    double absCMin = "Percentage".equals(cMinType) ? (cMin * campaignGoal / 100) : cMin;
+                    double absCMax = "Percentage".equals(cMaxType) ? (cMax * campaignGoal / 100) : cMax;
+                    double absChMin = "Percentage".equals(chMinType) ? (chMin * campaignGoal / 100) : chMin;
+                    double absChMax = "Percentage".equals(chMaxType) ? (chMax * campaignGoal / 100) : chMax;
+
+                    double effMin = Math.max(absCMin, absChMin);
+                    double effMax = Double.MAX_VALUE;
+                    if (absCMax > 0)
+                        effMax = Math.min(effMax, absCMax);
+                    if (absChMax > 0)
+                        effMax = Math.min(effMax, absChMax);
+
+                    // Enforce remaining goal
+                    if (donateAmount > remaining && campaignGoal > 0) {
+                        response.sendRedirect(
+                                "donatePage.jsp?id=" + campaign_id + "&LimitError=GoalExceeded&remaining=" + remaining);
+                        return;
+                    }
+
+                    if (donateAmount < effMin) {
+                        response.sendRedirect(
+                                "donatePage.jsp?id=" + campaign_id + "&LimitError=MinLimit&min=" + effMin);
+                        return;
+                    }
+                    if (effMax > 0 && donateAmount > effMax && effMax != Double.MAX_VALUE) {
+                        response.sendRedirect(
+                                "donatePage.jsp?id=" + campaign_id + "&LimitError=MaxLimit&max=" + effMax);
+                        return;
+                    }
+                } catch (Exception limEx) {
+                    System.out.println("Limit check failed: " + limEx.getMessage());
+                }
+
                 String sql = "insert into transaction(Tid, cname, campName, payment, amount, charity_id, campaign_id, did, dname, spentOn, spentFor, TofPayement, donationStatus, panchayat_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?)";
                 PreparedStatement statement = conn.prepareStatement(sql);
                 statement.setString(1, Tid);
@@ -90,18 +156,18 @@ public class donate extends HttpServlet {
                 statement.setInt(14, panchayatId != null ? panchayatId : 0);
                 int row = statement.executeUpdate();
                 if (row > 0) {
-                    // ResultSet rs = st.executeQuery("Select * from campaign where
-                    // id='"+campaign_id+"'");
-                    // rs.next();
-                    // int preValue =rs.getInt("AmountCol");
-                    // int totalValve= preValue+Integer.parseInt(amount);
-                    // int i = st1.executeUpdate("update campaign set AmountCol='"+totalValve+"'
-                    // where id='" + campaign_id + "'");
+                    // Update the campaign collected amount
+                    Statement stUpdate = conn.createStatement();
+                    stUpdate.executeUpdate("UPDATE campaign SET AmountCol = AmountCol + " + donateAmount
+                            + " WHERE id = '" + campaign_id + "'");
                     response.sendRedirect("donor_home.jsp?PaymentDone");
                 } else {
                     response.sendRedirect("donor_home.jsp?PaymentFailed");
                 }
             } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect("donor_home.jsp?PaymentFailed");
+                return;
             } finally {
                 out.close();
             }

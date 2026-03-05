@@ -2,20 +2,33 @@
     <%@page import="java.sql.*" %>
         <%@page import="java.util.*" %>
             <%@page import="DonationTracking.SQLconnection" %>
-                <% String[] h={ "id" , "cid" , "cname" , "campName" , "CampDes" , "Amount" , "EndDate" , "StartDate"
-                    , "CampStatus" , "AmountCol"
-                    , "SELECT\u0020*,\u0020(SELECT\u0020AmountCol\u0020FROM\u0020campaign\u0020WHERE\u0020id=c.id)\u0020as\u0020AmountCol\u0020FROM\u0020campaign\u0020c"
-                    , "\u0020WHERE\u0020c.panchayat_id=?" , "panchayat_id"
-                    , "\u003cb\u0020style='color:red;'\u003eLOCKED\u0020(Goal\u0020Reached)\u003c/b\u003e" }; ArrayList
-                    rows=new ArrayList(); String errMsg=null; java.sql.Connection con=null; try{
+                <% String[] h={ "\u0069\u0064" , "\u0063\u0069\u0064" , "\u0063\u006e\u0061\u006d\u0065"
+                    , "\u0063\u0061\u006d\u0070\u004e\u0061\u006d\u0065" , "\u0043\u0061\u006d\u0070\u0044\u0065\u0073"
+                    , "\u0041\u006d\u006f\u0075\u006e\u0074" , "\u0045\u006e\u0064\u0044\u0061\u0074\u0065"
+                    , "\u0053\u0074\u0061\u0072\u0074\u0044\u0061\u0074\u0065"
+                    , "\u0043\u0061\u006d\u0070\u0053\u0074\u0061\u0074\u0075\u0073"
+                    , "\u0041\u006d\u006f\u0075\u006e\u0074\u0043\u006f\u006c"
+                    , "\u0053\u0045\u004c\u0045\u0043\u0054\u0020\u002a\u002c\u0020\u0028\u0053\u0045\u004c\u0045\u0043\u0054\u0020\u0041\u006d\u006f\u0075\u006e\u0074\u0043\u006f\u006c\u0020\u0046\u0052\u004f\u004d\u0020\u0063\u0061\u006d\u0070\u0061\u0069\u0067\u006e\u0020\u0057\u0048\u0045\u0052\u0045\u0020\u0069\u0064\u003d\u0063\u002e\u0069\u0064\u0029\u0020\u0061\u0073\u0020\u0041\u006d\u006f\u0075\u006e\u0074\u0043\u006f\u006c\u0020\u0046\u0052\u004f\u004d\u0020\u0063\u0061\u006d\u0070\u0061\u0069\u0067\u006e\u0020\u0063"
+                    , "\u0020\u0057\u0048\u0045\u0052\u0045\u0020\u0063\u002e\u0070\u0061\u006e\u0063\u0068\u0061\u0079\u0061\u0074\u005f\u0069\u0064\u003d\u003f"
+                    , "\u0070\u0061\u006e\u0063\u0068\u0061\u0079\u0061\u0074\u005f\u0069\u0064"
+                    , "\u003c\u0062\u0020\u0073\u0074\u0079\u006c\u0065\u003d\u0027\u0063\u006f\u006c\u006f\u0072\u003a\u0072\u0065\u0064\u003b\u0027\u003e\u004c\u004f\u0043\u004b\u0045\u0044\u0020\u0028\u0047\u006f\u0061\u006c\u0020\u0052\u0065\u0061\u0063\u0068\u0065\u0064\u0029\u003c\u002f\u0062\u003e"
+                    , "\u006d\u0069\u006e\u005f\u0064\u006f\u006e\u0061\u0074\u0069\u006f\u006e"
+                    , "\u006d\u0069\u006e\u005f\u0064\u006f\u006e\u0061\u0074\u0069\u006f\u006e\u005f\u0074\u0079\u0070\u0065"
+                    , "\u006d\u0061\u0078\u005f\u0064\u006f\u006e\u0061\u0074\u0069\u006f\u006e"
+                    , "\u006d\u0061\u0078\u005f\u0064\u006f\u006e\u0061\u0074\u0069\u006f\u006e\u005f\u0074\u0079\u0070\u0065"
+                    , "\u0020\u0028" , "\u0029" , "\u004e\u002f\u0041" }; java.util.ArrayList rows=new
+                    java.util.ArrayList(); String errMsg=null; java.sql.Connection con=null; try{
                     con=DonationTracking.SQLconnection.getconnection(); if(con!=null){ Integer
                     pId=(Integer)session.getAttribute(h[12]); java.sql.PreparedStatement ps=con.prepareStatement(h[10] +
                     h[11]); ps.setInt(1,pId!=null?pId:0); java.sql.ResultSet rs=ps.executeQuery(); while(rs.next()){
-                    String[] r=new String[12]; r[0]=rs.getString(h[0]); r[1]=rs.getString(h[1]);
+                    String[] r=new String[14]; r[0]=rs.getString(h[0]); r[1]=rs.getString(h[1]);
                     r[2]=rs.getString(h[2]); r[3]=rs.getString(h[3]); r[4]=rs.getString(h[4]); r[5]=r[0];
                     r[6]=rs.getString(h[5]); r[7]=rs.getString(h[6]); r[8]=rs.getString(h[7]); r[9]=rs.getString(h[8]);
-                    r[10]=r[0]; r[11]=rs.getString(h[9]); rows.add(r); } } }catch(Exception ex){ ex.printStackTrace();
-                    errMsg=ex.getMessage(); } %>
+                    r[10]=r[0]; r[11]=rs.getString(h[9]); try {
+                    r[12]=rs.getString(h[14])+h[18]+rs.getString(h[15])+h[19];
+                    r[13]=rs.getString(h[16])+h[18]+rs.getString(h[17])+h[19]; } catch(Exception e2) { r[12]=h[20];
+                    r[13]=h[20]; } rows.add(r); } } }catch(Exception ex){ ex.printStackTrace(); errMsg=ex.getMessage();
+                    } %>
                     <!DOCTYPE html>
                     <html class="no-js">
 
@@ -118,6 +131,8 @@
                                                             <th>Campaign Pic</th>
                                                             <th>Amount</th>
                                                             <th>Amount Collected</th>
+                                                            <th>Min Limit</th>
+                                                            <th>Max Limit</th>
                                                             <th>End Date</th>
                                                             <th>Registered Date &amp; Time</th>
                                                             <th>Status</th>
@@ -127,7 +142,7 @@
                                                     <tbody>
                                                         <%if(errMsg!=null){%>
                                                             <tr>
-                                                                <td colspan="11">Error: <%=errMsg%>
+                                                                <td colspan="14">Error: <%=errMsg%>
                                                                 </td>
                                                             </tr>
                                                             <%}else{%>
@@ -156,6 +171,12 @@
                                                                             </td>
                                                                             <td>
                                                                                 <%=r[11]%>
+                                                                            </td>
+                                                                            <td>
+                                                                                <%=r[12]%>
+                                                                            </td>
+                                                                            <td>
+                                                                                <%=r[13]%>
                                                                             </td>
                                                                             <td>
                                                                                 <%=r[7]%>

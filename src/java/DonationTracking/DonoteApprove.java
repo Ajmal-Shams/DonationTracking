@@ -50,8 +50,14 @@ public class DonoteApprove extends HttpServlet {
                 String campaign_id = request.getParameter("campaign_id");
                 String rid = request.getParameter("rid");
 
-                String did = user.getAttribute("did").toString();
-                String dname = user.getAttribute("dname").toString();
+                Object didObj = user.getAttribute("did");
+                Object dnameObj = user.getAttribute("dname");
+                if (didObj == null || dnameObj == null) {
+                    response.sendRedirect("donor_log.jsp");
+                    return;
+                }
+                String did = didObj.toString();
+                String dname = dnameObj.toString();
                 Integer panchayatId = (Integer) user.getAttribute("panchayat_id");
 
                 Random RANDOM = new SecureRandom();

@@ -98,6 +98,23 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Update_Campaign</servlet-name>
+        <servlet-class>DonationTracking.Update_Campaign</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Update_Charity</servlet-name>
+        <servlet-class>DonationTracking.Update_Charity</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Update_Campaign</servlet-name>
+        <url-pattern>/Update_Campaign</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Update_Charity</servlet-name>
+        <url-pattern>/Update_Charity</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>GetCampaignImage</servlet-name>
         <servlet-class>DonationTracking.GetCampaignImage</servlet-class>
     </servlet>

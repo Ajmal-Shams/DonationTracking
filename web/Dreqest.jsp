@@ -99,12 +99,14 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <% Object didO=session.getAttribute("did"); if (didO !=null) { String
-                                                    d=didO.toString(); Connection c=null; try {
-                                                    c=SQLconnection.getconnection(); if (c !=null) { Statement
+                                                <% if (session.getAttribute("did")==null) {
+                                                    response.sendRedirect("donor_log.jsp"); return; } String
+                                                    d=session.getAttribute("did").toString(); Connection c=null;
+                                                    Statement s=null; ResultSet rs=null; try {
+                                                    c=SQLconnection.getconnection(); if (c !=null) {
                                                     s=c.createStatement(); String
                                                     q="SELECT * FROM donation_req WHERE did='" + d
-                                                    + "' AND reqStatus='Waiting' ORDER BY id DESC" ; ResultSet
+                                                    + "' AND reqStatus='Waiting' ORDER BY id DESC" ;
                                                     rs=s.executeQuery(q); while (rs.next()) { String
                                                     rid=rs.getString("id"); String cpid=rs.getString("campid"); %>
                                                     <tr>
@@ -134,7 +136,9 @@
                                                                 href="DonoteReject?rid=<%=rid%>" class="btn btn-danger"
                                                                 style="color:white">Reject</a></td>
                                                     </tr>
-                                                    <% } } } catch (Exception ex) { ex.printStackTrace(); } } %>
+                                                    <% } } } catch (Exception ex) { ex.printStackTrace(); } finally { if
+                                                        (rs !=null) rs.close(); if (s !=null) s.close(); if (c !=null)
+                                                        c.close(); } %>
                                             </tbody>
                                         </table>
                                     </div>

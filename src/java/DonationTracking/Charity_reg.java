@@ -43,6 +43,10 @@ public class Charity_reg extends HttpServlet {
                 String phone = request.getParameter("phone");
                 String address = request.getParameter("address");
                 String panchayatId = request.getParameter("panchayat_id");
+                String min_donation = request.getParameter("min_donation");
+                String min_donation_type = request.getParameter("min_donation_type");
+                String max_donation = request.getParameter("max_donation");
+                String max_donation_type = request.getParameter("max_donation_type");
                 String AccStatus = "Inactive";
 
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -51,7 +55,7 @@ public class Charity_reg extends HttpServlet {
                 System.out.println("current Date " + time);
                 Connection con = SQLconnection.getconnection();
                 java.sql.PreparedStatement ps = con.prepareStatement(
-                        "INSERT INTO charity_reg(CName, CMailid, CPhone, Caddress, CTor, CAccStatus, CPassword, panchayat_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                        "INSERT INTO charity_reg(CName, CMailid, CPhone, Caddress, CTor, CAccStatus, CPassword, panchayat_id, min_donation, max_donation, min_donation_type, max_donation_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 ps.setString(1, Charityname);
                 ps.setString(2, email);
                 ps.setString(3, phone);
@@ -60,6 +64,12 @@ public class Charity_reg extends HttpServlet {
                 ps.setString(6, AccStatus);
                 ps.setString(7, pass);
                 ps.setInt(8, Integer.parseInt(panchayatId));
+                ps.setDouble(9,
+                        (min_donation != null && !min_donation.isEmpty()) ? Double.parseDouble(min_donation) : 0);
+                ps.setDouble(10,
+                        (max_donation != null && !max_donation.isEmpty()) ? Double.parseDouble(max_donation) : 0);
+                ps.setString(11, min_donation_type != null ? min_donation_type : "Number");
+                ps.setString(12, max_donation_type != null ? max_donation_type : "Number");
                 int i = ps.executeUpdate();
                 if (i != 0) {
                     response.sendRedirect("Charity.jsp?Charity_success");

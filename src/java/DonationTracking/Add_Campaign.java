@@ -52,6 +52,10 @@ public class Add_Campaign extends HttpServlet {
             String Fdes = request.getParameter("Fdes");
             String Amount = request.getParameter("Amount");
             String Fdate = request.getParameter("Fdate");
+            String min_donation = request.getParameter("min_donation");
+            String min_donation_type = request.getParameter("min_donation_type");
+            String max_donation = request.getParameter("max_donation");
+            String max_donation_type = request.getParameter("max_donation_type");
             String cid = user.getAttribute("cid").toString();
             String cname = user.getAttribute("cname").toString();
             Integer panchayatId = (Integer) user.getAttribute("panchayat_id");
@@ -74,24 +78,54 @@ public class Add_Campaign extends HttpServlet {
             Statement st = con.createStatement();
 
             try {
-                String sql = "insert into campaign(campName, CampDes, CampPic, Amount, EndDate, StartDate, AmountCol, CampStatus, cid, cname, panchayat_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                PreparedStatement statement = conn.prepareStatement(sql);
-                statement.setString(1, Fname);
-                statement.setString(2, Fdes);
-                if (inputStream != null) {
-                    statement.setBlob(3, inputStream);
+                int row = 0;
+                try {
+                    String sql = "insert into campaign(campName, CampDes, CampPic, Amount, EndDate, StartDate, AmountCol, CampStatus, cid, cname, panchayat_id, min_donation, max_donation, min_donation_type, max_donation_type) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    PreparedStatement statement = conn.prepareStatement(sql);
+                    statement.setString(1, Fname);
+                    statement.setString(2, Fdes);
+                    if (inputStream != null) {
+                        statement.setBlob(3, inputStream);
+                    }
+                    statement.setString(4, Amount);
+                    statement.setString(5, Fdate);
+                    statement.setString(6, time);
+                    statement.setString(7, "0");
+                    statement.setString(8, "Inactive");
+                    statement.setString(9, cid);
+                    statement.setString(10, cname);
+                    statement.setInt(11, panchayatId != null ? panchayatId : 0);
+                    statement.setDouble(12,
+                            (min_donation != null && !min_donation.isEmpty()) ? Double.parseDouble(min_donation) : 0);
+                    statement.setDouble(13,
+                            (max_donation != null && !max_donation.isEmpty()) ? Double.parseDouble(max_donation) : 0);
+                    statement.setString(14, min_donation_type != null ? min_donation_type : "Number");
+                    statement.setString(15, max_donation_type != null ? max_donation_type : "Number");
+                    row = statement.executeUpdate();
+                } catch (SQLException colEx) {
+                    // Donation limit columns may not exist yet, try without them
+                    if (inputStream != null) {
+                        inputStream.close();
+                        inputStream = request.getPart("Fpic").getInputStream();
+                    }
+                    String sql2 = "insert into campaign(campName, CampDes, CampPic, Amount, EndDate, StartDate, AmountCol, CampStatus, cid, cname, panchayat_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    PreparedStatement stmt2 = conn.prepareStatement(sql2);
+                    stmt2.setString(1, Fname);
+                    stmt2.setString(2, Fdes);
+                    if (inputStream != null) {
+                        stmt2.setBlob(3, inputStream);
+                    }
+                    stmt2.setString(4, Amount);
+                    stmt2.setString(5, Fdate);
+                    stmt2.setString(6, time);
+                    stmt2.setString(7, "0");
+                    stmt2.setString(8, "Inactive");
+                    stmt2.setString(9, cid);
+                    stmt2.setString(10, cname);
+                    stmt2.setInt(11, panchayatId != null ? panchayatId : 0);
+                    row = stmt2.executeUpdate();
                 }
-                statement.setString(4, Amount);
-                statement.setString(5, Fdate);
-                statement.setString(6, time);
-                statement.setString(7, "0");
-                statement.setString(8, "Inactive");
-                statement.setString(9, cid);
-                statement.setString(10, cname);
-                statement.setInt(11, panchayatId != null ? panchayatId : 0);
-                int row = statement.executeUpdate();
                 if (row > 0) {
-
                     response.sendRedirect("Add_Campaigns.jsp?Added");
                 } else {
                     response.sendRedirect("Add_Campaigns.jsp?Failed");
@@ -99,6 +133,7 @@ public class Add_Campaign extends HttpServlet {
 
             } catch (SQLException ex) {
                 ex.printStackTrace();
+                response.sendRedirect("Add_Campaigns.jsp?Failed");
             }
         } catch (SQLException ex) {
             Logger.getLogger(Add_Campaign.class.getName()).log(Level.SEVERE, null, ex);

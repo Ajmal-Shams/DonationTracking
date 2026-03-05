@@ -108,8 +108,11 @@
                                                         <th>Amount</th>
                                                         <th>Amount Collected</th>
                                                         <th>End Date</th>
+                                                        <th>Min Limit</th>
+                                                        <th>Max Limit</th>
                                                         <th>Registered Date & Time</th>
                                                         <th>Status</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -142,6 +145,16 @@
                                                                 <%=rs.getString(h[8])%>
                                                             </td>
                                                             <td>
+                                                                <% try { out.print(rs.getString("min_donation") + " (" +
+                                                                    rs.getString("min_donation_type") + ")" ); }
+                                                                    catch(Exception e) { out.print("N/A"); } %>
+                                                            </td>
+                                                            <td>
+                                                                <% try { out.print(rs.getString("max_donation") + " (" +
+                                                                    rs.getString("max_donation_type") + ")" ); }
+                                                                    catch(Exception e) { out.print("N/A"); } %>
+                                                            </td>
+                                                            <td>
                                                                 <%=rs.getString(h[9])%>
                                                             </td>
                                                             <td>
@@ -155,6 +168,10 @@
                                                                     out.print(rs.getString(h[10]));
                                                                     }
                                                                     %>
+                                                            </td>
+                                                            <td>
+                                                                <a href="Edit_Campaign.jsp?id=<%=id%>"
+                                                                    class="btn btn-warning btn-sm">Edit</a>
                                                             </td>
                                                         </tr>
                                                         <% } } } catch (Exception ex) { ex.printStackTrace(); } } %>

@@ -32,7 +32,6 @@
     </head>
 
     <body>
-      <h1 style="color:red; background:yellow; z-index:9999; position:relative;">DEBUG MARKER: INDEX PAGE UPDATED</h1>
 
 
       <header class="main-header">

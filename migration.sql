@@ -65,6 +65,18 @@ CREATE TABLE IF NOT EXISTS donation_req (
   reqTime VARCHAR(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- 9. Add donation limits to campaign
+ALTER TABLE campaign ADD COLUMN min_donation DOUBLE DEFAULT 0;
+ALTER TABLE campaign ADD COLUMN max_donation DOUBLE DEFAULT 0;
+ALTER TABLE campaign ADD COLUMN min_donation_type VARCHAR(20) DEFAULT 'Number';
+ALTER TABLE campaign ADD COLUMN max_donation_type VARCHAR(20) DEFAULT 'Number';
+
+-- 10. Add donation limits to charity_reg
+ALTER TABLE charity_reg ADD COLUMN min_donation DOUBLE DEFAULT 0;
+ALTER TABLE charity_reg ADD COLUMN max_donation DOUBLE DEFAULT 0;
+ALTER TABLE charity_reg ADD COLUMN min_donation_type VARCHAR(20) DEFAULT 'Number';
+ALTER TABLE charity_reg ADD COLUMN max_donation_type VARCHAR(20) DEFAULT 'Number';
+
 -- Verify
 SELECT 'Migration complete' AS status;
 SHOW TABLES;

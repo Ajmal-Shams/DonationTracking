@@ -108,78 +108,105 @@
                                     <div class="row" style="display: flex; flex-wrap: wrap;">
                                         <% Statement st=null; ResultSet rs=null; try { if (con !=null) {
                                             st=con.createStatement(); String
-                                            query="SELECT c.id AS campaign_id, c.*, p.panchayat_name FROM campaign c "
-                                            + "JOIN charity_reg cr ON c.cid = cr.id "
-                                            + "JOIN panchayat p ON cr.panchayat_id = p.id "
-                                            + "WHERE c.CampStatus='Active'" ; String
-                                            selectedPanchayat=request.getParameter("panchayat"); if (selectedPanchayat
-                                            !=null && !selectedPanchayat.isEmpty()) { query +=" AND cr.panchayat_id = "
-                                            + selectedPanchayat; } rs=st.executeQuery(query); java.text.NumberFormat
-                                            nf=java.text.NumberFormat.getInstance(); nf.setMaximumFractionDigits(0);
-                                            while (rs.next()) { String cId=rs.getString("campaign_id"); int
-                                            iTotal=rs.getInt("Amount"); int iAmountCol=rs.getInt("AmountCol"); String
-                                            campName=rs.getString("campName"); String
-                                            panchayatName=rs.getString("panchayat_name"); String
-                                            campDes=rs.getString("CampDes"); int percentage=0; if (iTotal> 0) {
-                                            percentage = (int) (((double)iAmountCol / iTotal) * 100);
-                                            }
-                                            // Cap at 100% for visual sanity
-                                            if (percentage > 100) percentage = 100;
-
-                                            // Format Numbers
-                                            String fmtAmount = nf.format(iTotal);
-                                            String fmtAmountCol = nf.format(iAmountCol);
-                                            %>
+                                            query="SELECT c.id AS campaign_id, c.*, cr.min_donation AS char_min, cr.max_donation AS char_max, cr.min_donation_type AS char_min_type, cr.max_donation_type AS char_max_type, p.panchayat_name FROM campaign c LEFT JOIN charity_reg cr ON c.cid = cr.id LEFT JOIN panchayat p ON cr.panchayat_id = p.id WHERE c.CampStatus='Active'"
+                                            ; String sP=request.getParameter("panchayat"); if (sP !=null &&
+                                            !sP.isEmpty()) { query +=" AND cr.panchayat_id = " + sP; }
+                                            rs=st.executeQuery(query); java.text.NumberFormat
+                                            nf=java.text.NumberFormat.getInstance(); nf.setMinimumFractionDigits(2);
+                                            nf.setMaximumFractionDigits(2); while (rs.next()) { String
+                                            cId=rs.getString("campaign_id"); double iT=rs.getDouble("Amount"); double
+                                            iAC=rs.getDouble("AmountCol"); double rem=iT - iAC; String
+                                            cNm=rs.getString("campName"); String pNm=rs.getString("panchayat_name");
+                                            String cDs=rs.getString("CampDes"); int pct=(iT> 0) ? (int)((iAC / iT) *
+                                            100) : 0; if (pct > 100) pct = 100; %>
                                             <div class="col-md-3 col-sm-6" style="margin-bottom: 30px;">
                                                 <div class="cause"
-                                                    style="height: 100%; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                                    style="height: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column;">
                                                     <img src="GetCampaignImage?id=<%=cId%>" alt="" class="cause-img"
-                                                        style="height: 200px; width: 100%; object-fit: cover;">
-
+                                                        style="height: 180px; width: 100%; object-fit: cover;">
                                                     <div class="progress cause-progress"
-                                                        style="margin: 10px 0; background-color: #e9ecef;">
-                                                        <div class="progress-bar progress-bar-success progress-bar-striped active"
-                                                            role="progressbar" aria-valuenow="<%=percentage%>"
+                                                        style="margin: 10px 15px; background-color: #f0f0f0; border-radius: 10px; height: 12px;">
+                                                        <div class="progress-bar progress-bar-primary progress-bar-striped active"
+                                                            role="progressbar" aria-valuenow="<%=pct%>"
                                                             aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: <%=percentage%>%;">
-                                                            <%=percentage%>%
+                                                            style="width: <%=pct%>%; line-height: 12px; font-size: 10px; font-weight: bold;">
+                                                            <%=pct%>%
                                                         </div>
                                                     </div>
-
-                                                    <div class="currancy-details" style="padding: 0 15px;">
-                                                        <span class="currency-label"
-                                                            style="font-weight: bold; color: #5cb85c;">
-                                                            Raised: $<%=fmtAmountCol%>
-                                                        </span>
-                                                        <span class="currency-label pull-right" style="color: #666;">
-                                                            Goal: $<%=fmtAmount%>
-                                                        </span>
+                                                    <div class="info-block"
+                                                        style="padding: 0 15px; margin-bottom: 10px;">
+                                                        <div
+                                                            style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                                            <span style="color: #444; font-size: 12px;">Raised:
+                                                                <strong>$<%=nf.format(iAC)%></strong></span>
+                                                            <span style="color: #777; font-size: 12px;">Goal: <strong>$
+                                                                    <%=nf.format(iT)%></strong></span>
+                                                        </div>
+                                                        <div
+                                                            style="background: #e7f3fe; padding: 5px 10px; border-radius: 4px; text-align: center;">
+                                                            <span
+                                                                style="color: #31708f; font-size: 13px; font-weight: bold;">Remaining:
+                                                                $<%=nf.format(rem)%></span>
+                                                        </div>
                                                     </div>
-
-                                                    <h4 class="cause-title" style="padding: 0 15px; margin-top: 10px;">
-                                                        <a href="#">
-                                                            <%=campName%>
-                                                        </a>
-                                                    </h4>
-
-                                                    <div class="cause-details" style="padding: 0 15px 15px;">
-                                                        <p class="text-muted"><small><i class="fa fa-map-marker"></i>
-                                                                <%=panchayatName%>
+                                                    <h4 class="cause-title"
+                                                        style="padding: 0 15px; margin: 5px 0; min-height: 44px;"><a
+                                                            href="#" style="color: #333; transition: color 0.3s;">
+                                                            <%=cNm%>
+                                                        </a></h4>
+                                                    <div class="cause-details" style="padding: 0 15px; flex-grow: 1;">
+                                                        <p class="text-muted" style="margin-bottom: 8px;"><small><i
+                                                                    class="fa fa-map-marker"
+                                                                    style="color: #d9534f;"></i>
+                                                                <%=pNm%>
                                                             </small></p>
-                                                        <p>
-                                                            <%=campDes%>
-                                                        </p>
+                                                        <% double eMn=0; double eMx=Double.MAX_VALUE; try { double
+                                                            cMn=rs.getDouble("min_donation"); double
+                                                            cMx=rs.getDouble("max_donation"); String
+                                                            cMT=rs.getString("min_donation_type"); String
+                                                            cXT=rs.getString("max_donation_type"); double
+                                                            hMn=rs.getDouble("char_min"); double
+                                                            hMx=rs.getDouble("char_max"); String
+                                                            hMT=rs.getString("char_min_type"); String
+                                                            hXT=rs.getString("char_max_type"); if (cMT==null)
+                                                            cMT="Number" ; if (cXT==null) cXT="Number" ; if (hMT==null)
+                                                            hMT="Number" ; if (hXT==null) hXT="Number" ; double
+                                                            aMn="Percentage" .equals(cMT)?(cMn*iT/100):cMn; double
+                                                            aMx="Percentage" .equals(cXT)?(cMx*iT/100):cMx; double
+                                                            bMn="Percentage" .equals(hMT)?(hMn*iT/100):hMn; double
+                                                            bMx="Percentage" .equals(hXT)?(hMx*iT/100):hMx;
+                                                            eMn=Math.max(aMn, bMn); if (aMx>0) eMx=Math.min(eMx, aMx);
+                                                            if (bMx>0) eMx=Math.min(eMx, bMx); eMx=Math.min(eMx, rem); }
+                                                            catch (Exception elim) { elim.printStackTrace(); } if (eMn >
+                                                            0.01 || (eMx < Double.MAX_VALUE && eMx> 0)) { %>
+                                                                <div
+                                                                    style="background: #fdf6ec; border-left: 3px solid #f0ad4e; padding: 5px 8px; border-radius: 0 4px 4px 0; margin-bottom: 15px; font-size: 11px;">
+                                                                    <strong style="color: #8a6d3b;">Donation
+                                                                        Limits:</strong><br>
+                                                                    <% if (eMn> 0.01) { %> <span
+                                                                            style="display:inline-block; min-width: 60px;">Min:</span>
+                                                                        <strong>$<%=nf.format(eMn)%></strong><br>
+                                                                        <% } if (eMx < Double.MAX_VALUE && eMx> 0) { %>
+                                                                            <span
+                                                                                style="display:inline-block; min-width: 60px;">Max:</span>
+                                                                            <strong>$<%=nf.format(eMx)%></strong>
+                                                                            <% } %>
+                                                                </div>
+                                                                <% } %>
+                                                                    <p
+                                                                        style="font-size: 13px; line-height: 1.4; color: #666; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+                                                                        <%=cDs%>
+                                                                    </p>
                                                     </div>
-
-                                                    <div class="btn-holder text-center" style="padding-bottom: 20px;">
-                                                        <% if (iAmountCol>= iTotal) { %>
-                                                            <button class="btn btn-default" disabled
-                                                                style="background-color: #f8f9fa; border-color: #ddd; color: #6c757d; cursor: not-allowed; font-weight: bold;">
-                                                                GOAL REACHED</button>
-                                                            <% } else { %>
-                                                                <a href="donatePage.jsp?id=<%=cId%>"
-                                                                    class="btn btn-primary">
-                                                                    DONATE NOW</a>
+                                                    <div class="btn-holder text-center" style="padding: 15px;">
+                                                        <% if (iAC>= iT) { %> <button class="btn btn-default btn-block"
+                                                                disabled
+                                                                style="background-color: #eee; color: #999; border: none; font-weight: bold; border-radius: 4px;">GOAL
+                                                                REACHED</button>
+                                                            <% } else { %> <a href="donatePage.jsp?id=<%=cId%>"
+                                                                    class="btn btn-primary btn-block"
+                                                                    style="font-weight: bold; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">DONATE
+                                                                    NOW</a>
                                                                 <% } %>
                                                     </div>
                                                 </div>
