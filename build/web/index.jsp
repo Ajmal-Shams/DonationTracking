@@ -96,6 +96,8 @@
                 <ul class="nav navbar-nav">
 
                   <li><a class="is-active" href="index.jsp">HOME</a></li>
+                  <li><a href="about.jsp">About Us</a></li>
+                  <li><a href="contact.jsp">Contact Us</a></li>
                   <li><a href="SuperAdmin.jsp">Super Admin</a></li>
                   <li><a href="Admin.jsp">Admin</a></li>
                   <li><a href="Charity.jsp">Charity</a></li>

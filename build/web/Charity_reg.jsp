@@ -85,7 +85,7 @@
                         </header>
                         <div class="page-heading text-center">
                             <div class="container zoomIn animated">
-                                <h1 class="page-title">Refister As Charity<span class="title-under"></span></h1>
+                                <h1 class="page-title">Register As Charity<span class="title-under"></span></h1>
                                 <p class="page-description">
                                 </p>
                             </div>

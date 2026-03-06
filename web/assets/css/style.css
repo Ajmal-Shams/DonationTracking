@@ -1056,3 +1056,188 @@ form .alert {
   -webkit-animation-name: zoomIn;
   animation-name: zoomIn;
 }
+
+/* =============================================================================
+   About Page - How It Works
+========================================================================== */
+.how-it-works {
+  background: #f8f9fa;
+  padding: 40px 0;
+}
+
+.step-card {
+  padding: 30px 20px;
+  margin-bottom: 30px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  -moz-transition: all, 0.3s;
+  -o-transition: all, 0.3s;
+  -webkit-transition: all, 0.3s;
+  transition: all, 0.3s;
+}
+.step-card:hover {
+  border-color: #1f76bd;
+  box-shadow: 0 5px 25px rgba(31, 118, 189, 0.15);
+  -moz-transform: translateY(-5px);
+  -webkit-transform: translateY(-5px);
+  transform: translateY(-5px);
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: #1f76bd;
+  color: #fff;
+  border-radius: 50%;
+  line-height: 40px;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: "Dosis", sans-serif;
+  margin: 0 auto 15px;
+}
+
+.step-icon {
+  font-size: 42px;
+  color: #1f76bd;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.step-title {
+  font-family: "Dosis", sans-serif;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #115c9b;
+  margin-bottom: 10px;
+}
+
+.step-desc {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* =============================================================================
+   About Page - Stats Section
+========================================================================== */
+.stats-section {
+  background: linear-gradient(160deg, #115b9b -25%, #1290f8 50%, #115b9b 125%);
+  padding: 50px 0;
+  color: #fff;
+}
+
+.stat-item {
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+.stat-icon {
+  font-size: 42px;
+  margin-bottom: 15px;
+  display: block;
+  opacity: 0.8;
+}
+
+.stat-number {
+  font-family: "Dosis", sans-serif;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 0 0 5px;
+}
+
+.stat-label {
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+/* =============================================================================
+   Contact Page - Info Cards
+========================================================================== */
+.contact-info-card {
+  padding: 30px 20px;
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  -moz-transition: all, 0.3s;
+  -o-transition: all, 0.3s;
+  -webkit-transition: all, 0.3s;
+  transition: all, 0.3s;
+}
+.contact-info-card:hover {
+  border-color: #1f76bd;
+  box-shadow: 0 5px 25px rgba(31, 118, 189, 0.15);
+}
+
+.contact-card-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #1f76bd, #115c9b);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  line-height: 70px;
+  color: #fff;
+  font-size: 28px;
+}
+
+.contact-card-title {
+  font-family: "Dosis", sans-serif;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #115c9b;
+  margin-bottom: 15px;
+}
+
+.contact-info-card p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.8;
+}
+
+.contact-form .form-control {
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  height: auto;
+}
+.contact-form .form-control:focus {
+  border-color: #1f76bd;
+  box-shadow: 0 0 5px rgba(31, 118, 189, 0.2);
+}
+
+/* =============================================================================
+   Contact Page - FAQ Section
+========================================================================== */
+.faq-section {
+  background: #f8f9fa;
+  padding: 40px 0;
+}
+
+.faq-section .panel-title a {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none;
+  font-size: 15px;
+}
+.faq-section .panel-title a .fa {
+  margin-right: 8px;
+  color: rgba(255,255,255,0.7);
+}
+.faq-section .panel-body {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+}
+
+/* =============================================================================
+   About Page - Story Section
+========================================================================== */
+.about-story {
+  padding: 20px 0;
+}
+
+.story-content {
+  padding: 20px;
+}
