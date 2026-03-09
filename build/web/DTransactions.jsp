@@ -162,8 +162,7 @@
                                                 did=session.getAttribute("did").toString(); Connection con=null;
                                                 Statement st=null; ResultSet rs=null; try {
                                                 con=SQLconnection.getconnection(); st=con.createStatement();
-                                                rs=st.executeQuery("Select * from transaction where did='" + did + "'
-                                                ORDER BY id DESC; ");
+                                                rs=st.executeQuery("Select * from transaction where did='" + did + "' ORDER BY id DESC; ");
                                 while (rs.next()) {
                         %>
                         <tr>
