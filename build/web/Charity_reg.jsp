@@ -1,12 +1,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
-    <%@page import="java.sql.*" %>
-        <%@page import="java.util.*" %>
-            <%@page import="DonationTracking.SQLconnection" %>
-                <% String q="SELECT * FROM panchayat" +" ORDER BY panchayat_name"; ArrayList panchayats=new ArrayList();
-                    Connection con=null; try{ con=SQLconnection.getconnection(); if(con!=null){ Statement
-                    st=con.createStatement(); ResultSet rs=st.executeQuery(q); while(rs.next()){ String[] p=new
-                    String[2]; p[0]=rs.getString("id"); p[1]=rs.getString("panchayat_name"); panchayats.add(p); } }
-                    }catch(Exception e){ e.printStackTrace(); } %>
                     <!DOCTYPE html>
                     <html class="no-js">
 
@@ -119,15 +111,17 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="form-group col-md-12">
-                                                    <select class="form-control" name="panchayat_id" required="">
-                                                        <option value="">Select Panchayat*</option>
-                                                        <%for(int i=0;i<panchayats.size();i++){%>
-                                                            <%String[] p=(String[])panchayats.get(i);%>
-                                                                <option value="<%=p[0]%>">
-                                                                    <%=p[1]%>
-                                                                </option>
-                                                                <%}%>
+                                                <div class="form-group col-md-6">
+                                                    <label>District*</label>
+                                                    <select class="form-control" id="districtSel" name="district" required="">
+                                                        <option value="">-- Select District --</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Panchayat*</label>
+                                                    <input type="text" class="form-control" id="panchayatSearch" placeholder="Search panchayat..." style="margin-bottom:5px;">
+                                                    <select class="form-control" id="panchayatSel" name="panchayat_name" required="">
+                                                        <option value="">-- Select Panchayat --</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -211,7 +205,11 @@
                         </footer>
                         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
                         <script src="assets/js/bootstrap.min.js"></script>
+                        <script src="assets/js/kerala_data.js"></script>
                         <script src="assets/js/main.js"></script>
+                        <script>
+                            setupSearchablePanchayat('districtSel', 'panchayatSearch', 'panchayatSel', '', '');
+                        </script>
                     </body>
 
                     </html>

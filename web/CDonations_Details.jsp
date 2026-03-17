@@ -1,7 +1,7 @@
 <%-- 
     Document   : CDonations_Details
     Created on : Nov 21, 2022, 12:47:49 PM
-    Author     : Murthi
+    Author     : 
 --%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="DonationTracking.SQLconnection"%>

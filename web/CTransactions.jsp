@@ -1,7 +1,7 @@
 <%-- 
     Document   : CTransactions
     Created on : Nov 21, 2022, 4:48:50 PM
-    Author     : Murthi
+    Author     : 
 --%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="DonationTracking.SQLconnection"%>

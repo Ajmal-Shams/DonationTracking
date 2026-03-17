@@ -27,17 +27,23 @@ public class manage_panchayat extends HttpServlet {
 
                 if ("add".equals(action)) {
                     String panchayatName = request.getParameter("panchayat_name");
-                    PreparedStatement ps = con.prepareStatement("INSERT INTO panchayat (panchayat_name) VALUES (?)");
-                    ps.setString(1, panchayatName);
+                    String district = request.getParameter("district");
+                    if (district == null) district = "";
+                    PreparedStatement ps = con.prepareStatement("INSERT INTO panchayat (district, panchayat_name) VALUES (?, ?)");
+                    ps.setString(1, district);
+                    ps.setString(2, panchayatName);
                     ps.executeUpdate();
                     response.sendRedirect("SuperAdmin_home.jsp?panchayat_added");
 
                 } else if ("update".equals(action)) {
                     String panchayatId = request.getParameter("panchayat_id");
                     String panchayatName = request.getParameter("panchayat_name");
-                    PreparedStatement ps = con.prepareStatement("UPDATE panchayat SET panchayat_name = ? WHERE id = ?");
+                    String district = request.getParameter("district");
+                    if (district == null) district = "";
+                    PreparedStatement ps = con.prepareStatement("UPDATE panchayat SET panchayat_name = ?, district = ? WHERE id = ?");
                     ps.setString(1, panchayatName);
-                    ps.setInt(2, Integer.parseInt(panchayatId));
+                    ps.setString(2, district);
+                    ps.setInt(3, Integer.parseInt(panchayatId));
                     ps.executeUpdate();
                     response.sendRedirect("SuperAdmin_home.jsp?panchayat_updated");
 

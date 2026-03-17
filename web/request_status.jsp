@@ -78,7 +78,7 @@
                                                                 class="navbar-collapse collapse pull-right">
                                                                 <ul class="nav navbar-nav">
                                                                     <li><a href="Charity_home.jsp">HOME</a></li>
-                                                                    <li><a href="Add_Campaign.jsp">Add Campaigns</a>
+                                                                    <li><a href="Add_Campaigns.jsp">Add Campaigns</a>
                                                                     </li>
                                                                     <li><a
                                                                             href="View_Campaigns_Details.jsp">Campaigns</a>

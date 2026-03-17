@@ -23,6 +23,14 @@
                         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
                         <link rel="stylesheet" href="assets/css/font-awesome.min.css">
                         <link rel="stylesheet" href="assets/css/style.css">
+                        <script>
+                            function toggle(source) {
+                                checkboxes = document.getElementsByName('ids');
+                                for (var i = 0, n = checkboxes.length; i < n; i++) {
+                                    checkboxes[i].checked = source.checked;
+                                }
+                            }
+                        </script>
                     </head>
 
                     <body>
@@ -62,9 +70,19 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <table class="table table-bordered table-striped">
+                                        <h4 class="pull-right">Total Donations: <strong>
+                                                <%=rows.size()%>
+                                            </strong></h4>
+                                        <form action="delete_entity.jsp" method="post"
+                                            onsubmit="return confirm('Are you sure you want to delete selected donations?');">
+                                            <input type="hidden" name="type" value="donation">
+                                            <button type="submit" class="btn btn-danger"
+                                                style="margin-bottom: 10px;">Delete Selected</button>
+
+                                            <table class="table table-bordered table-striped">
                                             <thead>
                                                 <tr>
+                                                    <th><input type="checkbox" onClick="toggle(this)"></th>
                                                     <th>ID</th>
                                                     <th>Charity Name</th>
                                                     <th>Campaign</th>
@@ -72,18 +90,21 @@
                                                     <th>Donor Name</th>
                                                     <th>Status</th>
                                                     <th>Date</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <% if (errMsg !=null) { %>
                                                     <tr>
-                                                        <td colspan="7">Error: <%=errMsg%>
+                                                        <td colspan="9">Error: <%=errMsg%>
                                                         </td>
                                                     </tr>
                                                     <% } else { %>
                                                         <% for (int i=0; i < rows.size(); i++) { %>
                                                             <% String[] r=(String[]) rows.get(i); %>
                                                                 <tr>
+                                                                    <td><input type="checkbox" name="ids"
+                                                                            value="<%=r[0]%>"></td>
                                                                     <td>
                                                                         <%=r[0]%>
                                                                     </td>
@@ -105,11 +126,17 @@
                                                                     <td>
                                                                         <%=r[6]%>
                                                                     </td>
+                                                                    <td>
+                                                                        <a href="delete_entity.jsp?type=donation&id=<%=r[0]%>"
+                                                                            class="btn btn-danger btn-xs"
+                                                                            onclick="return confirm('Delete this donation?')">Delete</a>
+                                                                    </td>
                                                                 </tr>
                                                                 <% } %>
                                                                     <% } %>
                                             </tbody>
                                         </table>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

@@ -9,8 +9,8 @@
                     vMaxDonation=0; String vMinType=null, vMaxType=null; boolean found=false; boolean hasLimits=false;
                     String errMsg=null; try { con=SQLconnection.getconnection(); st=con.createStatement(); String
                     q="SELECT * FROM charity_reg WHERE id='" + cid + "'" ; rs=st.executeQuery(q);
-                    stP=con.createStatement(); rsP=stP.executeQuery("SELECT * FROM panchayat"); while (rsP.next()) {
-                    String[] p={ rsP.getString(1), rsP.getString(2) }; panchayats.add(p); } if (rs.next()) { found=true;
+                    stP=con.createStatement(); rsP=stP.executeQuery("SELECT id, district, panchayat_name FROM panchayat ORDER BY district, panchayat_name"); while (rsP.next()) {
+                    String[] p={ rsP.getString("id"), rsP.getString("panchayat_name"), rsP.getString("district") != null ? rsP.getString("district") : "" }; panchayats.add(p); } if (rs.next()) { found=true;
                     vCName=rs.getString(2); vCMailid=rs.getString(3); vCPhone=rs.getString(4);
                     vCaddress=rs.getString(5); int colCount=rs.getMetaData().getColumnCount(); if (colCount>= 9) {
                     vPanchayatId = rs.getString(9);
@@ -114,14 +114,26 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>District</label>
+                                                        <select class="form-control" id="editDistrict" onchange="filterEditPanchayat()">
+                                                            <option value="">All Districts</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Search Panchayat</label>
+                                                        <input type="text" class="form-control" id="editPanchayatSearch" placeholder="Search..." onkeyup="filterEditPanchayat()">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
                                                     <div class="form-group col-md-12">
                                                         <label>Panchayat</label>
-                                                        <select class="form-control" name="panchayat_id" required="">
+                                                        <select class="form-control" name="panchayat_id" id="editPanchayat" required="">
                                                             <% for (int i=0; i < panchayats.size(); i++) { String[]
                                                                 p=(String[]) panchayats.get(i); %>
-                                                                <option value="<%=p[0]%>" <% if
+                                                                <option value="<%=p[0]%>" data-district="<%=p[2]%>" <% if
                                                                     (p[0].equals(vPanchayatId)) { %>selected<% } %>>
-                                                                        <%=p[1]%>
+                                                                        <%=p[1]%> (<%=p[2]%>)
                                                                 </option>
                                                                 <% } %>
                                                         </select>
@@ -194,7 +206,42 @@
                         </footer>
                         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
                         <script src="assets/js/bootstrap.min.js"></script>
+                        <script src="assets/js/kerala_data.js"></script>
                         <script src="assets/js/main.js"></script>
+                        <script>
+                            (function(){
+                                var distSel = document.getElementById('editDistrict');
+                                var pSel = document.getElementById('editPanchayat');
+                                var districts = {};
+                                for(var i=0;i<pSel.options.length;i++){
+                                    var d = pSel.options[i].getAttribute('data-district');
+                                    if(d) districts[d]=true;
+                                }
+                                var sorted = Object.keys(districts).sort();
+                                for(var j=0;j<sorted.length;j++){
+                                    var o=document.createElement('option');
+                                    o.value=sorted[j]; o.textContent=sorted[j];
+                                    distSel.appendChild(o);
+                                }
+                                // Auto-select district based on currently selected panchayat
+                                var selOpt = pSel.options[pSel.selectedIndex];
+                                if(selOpt && selOpt.getAttribute('data-district')){
+                                    distSel.value = selOpt.getAttribute('data-district');
+                                }
+                            })();
+                            function filterEditPanchayat(){
+                                var dist = document.getElementById('editDistrict').value;
+                                var search = document.getElementById('editPanchayatSearch').value.toLowerCase();
+                                var pSel = document.getElementById('editPanchayat');
+                                for(var i=0;i<pSel.options.length;i++){
+                                    var od = pSel.options[i].getAttribute('data-district');
+                                    var nm = pSel.options[i].textContent.toLowerCase();
+                                    var distMatch = (!dist || od === dist);
+                                    var searchMatch = (!search || nm.indexOf(search) > -1);
+                                    pSel.options[i].style.display = (distMatch && searchMatch) ? '' : 'none';
+                                }
+                            }
+                        </script>
                     </body>
 
                     </html>

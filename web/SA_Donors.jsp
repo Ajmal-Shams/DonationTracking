@@ -4,11 +4,13 @@
             <%@page import="DonationTracking.SQLconnection" %>
                 <% ArrayList rows=new ArrayList(); String errMsg=null; Connection con=null; try {
                     con=SQLconnection.getconnection(); if (con !=null) { Statement st=con.createStatement(); String
-                    sql="SELECT d.*, p.panchayat_name FROM donor_reg d "
+                    sql="SELECT d.*, p.panchayat_name, p.district FROM donor_reg d "
                     + "LEFT JOIN panchayat p ON d.panchayat_id = p.id " + "ORDER BY d.id DESC" ; ResultSet
                     rs=st.executeQuery(sql); while (rs.next()) { String[] r=new String[7]; r[0]=rs.getString("id");
                     r[1]=rs.getString("Name"); r[2]=rs.getString("Mailid"); r[3]=rs.getString("Phone");
-                    r[4]=rs.getString("Address"); r[5]=rs.getString("panchayat_name"); if (r[5]==null) r[5]="N/A" ;
+                    r[4]=rs.getString("Address"); r[5]=rs.getString("panchayat_name");
+                    String _dist=""; try{ _dist=rs.getString("district"); }catch(Exception _e){}
+                    if (r[5]==null) r[5]="N/A"; else if(_dist!=null && !_dist.isEmpty()) r[5]=r[5]+" ("+_dist+")";
                     r[6]=rs.getString("Tor"); rows.add(r); } } } catch (Exception ex) { ex.printStackTrace();
                     errMsg=ex.getMessage(); } %>
                     <!DOCTYPE html>

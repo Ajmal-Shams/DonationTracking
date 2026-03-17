@@ -1,7 +1,7 @@
 <%-- 
     Document   : DonoteApprove
     Created on : Nov 21, 2022, 11:17:52 PM
-    Author     : Murthi
+    Author     : 
 --%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>

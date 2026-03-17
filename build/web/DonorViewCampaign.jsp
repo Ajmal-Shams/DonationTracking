@@ -83,23 +83,43 @@
                                         <div class="col-md-12">
                                             <form action="DonorViewCampaign.jsp" method="get" class="form-inline"
                                                 style="margin-bottom: 20px;">
-                                                <div class="form-group">
-                                                    <label for="panchayat">Filter by Panchayat: </label>
-                                                    <select name="panchayat" class="form-control"
+                                                <% Connection con=null; String selectedPanchayat=request.getParameter("panchayat"); String selectedDistrict=request.getParameter("district"); %>
+                                                <div class="form-group" style="margin-right:10px;">
+                                                    <label>District: </label>
+                                                    <select name="district" id="campDistrictFilter" class="form-control" onchange="filterCampPanchayat(); this.form.submit();">
+                                                        <option value="">All Districts</option>
+                                                        <% try { con=SQLconnection.getconnection();
+                                                            Statement stD=con.createStatement();
+                                                            ResultSet rsD=stD.executeQuery("SELECT DISTINCT district FROM panchayat WHERE district != '' ORDER BY district");
+                                                            while(rsD.next()){ String dName=rsD.getString("district");
+                                                            String dSel=(dName.equals(selectedDistrict)) ? "selected" : ""; %>
+                                                            <option value="<%=dName%>" <%=dSel%>><%=dName%></option>
+                                                            <% } } catch(Exception e) { e.printStackTrace(); } %>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" style="margin-right:10px;">
+                                                    <label>Panchayat: </label>
+                                                    <select name="panchayat" id="campPanchayatFilter" class="form-control"
                                                         onchange="this.form.submit()">
                                                         <option value="">All Panchayats</option>
-                                                        <% Connection con=null; try { con=SQLconnection.getconnection();
-                                                            Statement stP=con.createStatement(); String
-                                                            selectedPanchayat=request.getParameter("panchayat");
-                                                            ResultSet rsP=stP.executeQuery("SELECT * FROM panchayat");
+                                                        <% try { if(con==null) con=SQLconnection.getconnection();
+                                                            Statement stP=con.createStatement();
+                                                            String pQuery="SELECT * FROM panchayat";
+                                                            if(selectedDistrict!=null && !selectedDistrict.isEmpty()) pQuery+=" WHERE district='"+selectedDistrict.replace("'","''")+"'";
+                                                            pQuery+=" ORDER BY district, panchayat_name";
+                                                            ResultSet rsP=stP.executeQuery(pQuery);
                                                             while(rsP.next()){ String pId=rsP.getString("id"); String
-                                                            pName=rsP.getString("panchayat_name"); String
-                                                            selected=(pId.equals(selectedPanchayat)) ? "selected" : "" ;
+                                                            pName=rsP.getString("panchayat_name");
+                                                            String pDist=""; try{ pDist=rsP.getString("district"); if(pDist==null) pDist=""; }catch(Exception ex){}
+                                                            String selected=(pId.equals(selectedPanchayat)) ? "selected" : "" ;
                                                             %>
-                                                            <option value="<%=pId%>" <%=selected%>><%=pName%>
+                                                            <option value="<%=pId%>" <%=selected%>><%=pName%><% if(!pDist.isEmpty()){ %> (<%=pDist%>)<% } %>
                                                             </option>
                                                             <% } } catch(Exception e) { e.printStackTrace(); } %>
                                                     </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="campSearchInput" placeholder="Search panchayat..." onkeyup="searchCampPanchayat()">
                                                 </div>
                                             </form>
                                         </div>
@@ -110,7 +130,11 @@
                                             st=con.createStatement(); String
                                             query="SELECT c.id AS campaign_id, c.*, cr.min_donation AS char_min, cr.max_donation AS char_max, cr.min_donation_type AS char_min_type, cr.max_donation_type AS char_max_type, p.panchayat_name FROM campaign c LEFT JOIN charity_reg cr ON c.cid = cr.id LEFT JOIN panchayat p ON cr.panchayat_id = p.id WHERE c.CampStatus='Active'"
                                             ; String sP=request.getParameter("panchayat"); if (sP !=null &&
-                                            !sP.isEmpty()) { query +=" AND cr.panchayat_id = " + sP; }
+                                            !sP.isEmpty()) { query +=" AND cr.panchayat_id = " + Integer.parseInt(sP); }
+                                            String sCharityId=request.getParameter("id"); if (sCharityId !=null &&
+                                            !sCharityId.isEmpty()) { query +=" AND cr.id = " + Integer.parseInt(sCharityId); }
+                                            String sDist=request.getParameter("district"); if (sDist !=null &&
+                                            !sDist.isEmpty()) { query +=" AND p.district = '" + sDist.replace("'","''") + "'"; }
                                             rs=st.executeQuery(query); java.text.NumberFormat
                                             nf=java.text.NumberFormat.getInstance(); nf.setMinimumFractionDigits(2);
                                             nf.setMaximumFractionDigits(2); while (rs.next()) { String
@@ -230,6 +254,16 @@
                             <script src="assets/js/bootstrap.min.js"></script>
 
                             <script src="assets/js/main.js"></script>
+                            <script>
+                                function searchCampPanchayat(){
+                                    var input = document.getElementById('campSearchInput').value.toLowerCase();
+                                    var sel = document.getElementById('campPanchayatFilter');
+                                    for(var i=1;i<sel.options.length;i++){
+                                        var txt = sel.options[i].textContent.toLowerCase();
+                                        sel.options[i].style.display = txt.indexOf(input) > -1 ? '' : 'none';
+                                    }
+                                }
+                            </script>
                         </body>
 
                         </html>

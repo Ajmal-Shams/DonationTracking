@@ -1,7 +1,7 @@
 <%-- 
     Document   : Donate
     Created on : Nov 19, 2022, 2:45:25 PM
-    Author     : Murthi
+    Author     : 
 --%>
 
 <%@page import="java.sql.ResultSet"%>
@@ -144,28 +144,72 @@
                         <form class="form-donation" action="DonorViewCampaign.jsp" method="get">
 
                             <h3 class="title-style-1 text-center">Select the charity<span class="title-under"></span>  </h3>
+
+                            <!-- Optional District Filter -->
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <select class="form-control" name="id"  required="">
-                                        
-                                        <optgroup label="Select the Charity">
-                                            <%
-
+                                    <label>Filter by District (Optional)</label>
+                                    <select class="form-control" id="districtFilter" name="district" onchange="filterCharities()">
+                                        <option value="">-- All Districts --</option>
+                                        <%
                                             Connection con = SQLconnection.getconnection();
+                                            Statement stD = con.createStatement();
+                                            try {
+                                                ResultSet rsD = stD.executeQuery("SELECT DISTINCT p.district FROM panchayat p INNER JOIN charity_reg c ON c.panchayat_id = p.id WHERE p.district != '' ORDER BY p.district");
+                                                while (rsD.next()) {
+                                        %>
+                                        <option value="<%=rsD.getString("district")%>"><%=rsD.getString("district")%></option>
+                                        <%      }
+                                            } catch (Exception ex) { ex.printStackTrace(); }
+                                        %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Optional Panchayat Filter -->
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label>Filter by Panchayat (Optional)</label>
+                                    <select class="form-control" id="panchayatFilter" name="panchayat" onchange="filterCharities()">
+                                        <option value="">-- All Panchayats --</option>
+                                        <%
+                                            Statement stP = con.createStatement();
+                                            try {
+                                                ResultSet rsP = stP.executeQuery("SELECT DISTINCT p.id, p.panchayat_name, p.district FROM panchayat p INNER JOIN charity_reg c ON c.panchayat_id = p.id ORDER BY p.district, p.panchayat_name");
+                                                while (rsP.next()) {
+                                                    String pDist = rsP.getString("district");
+                                                    if (pDist == null) pDist = "";
+                                        %>
+                                        <option value="<%=rsP.getString("id")%>" data-district="<%=pDist%>"><%=rsP.getString("panchayat_name")%><% if(!pDist.isEmpty()){ %> (<%=pDist%>)<% } %></option>
+                                        <%      }
+                                            } catch (Exception ex) { ex.printStackTrace(); }
+                                        %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Charity Selector -->
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label>Select Charity *</label>
+                                    <select class="form-control" name="id" id="charitySelect" required="">
+                                        <option value="">-- Select Charity --</option>
+                                        <%
                                             Statement st = con.createStatement();
                                             try {
-                                                ResultSet rs = st.executeQuery("Select * from charity_reg");
+                                                ResultSet rs = st.executeQuery("SELECT c.id, c.CName, p.panchayat_name, p.district, p.id AS pid FROM charity_reg c LEFT JOIN panchayat p ON c.panchayat_id = p.id ORDER BY c.CName");
                                                 while (rs.next()) {
+                                                    String cDist = rs.getString("district");
+                                                    String cPanch = rs.getString("panchayat_name");
+                                                    String cPid = rs.getString("pid");
+                                                    if (cDist == null) cDist = "";
+                                                    if (cPanch == null) cPanch = "";
+                                                    if (cPid == null) cPid = "";
                                         %>
-                                            <option value="<%=rs.getString("id")%>"><%=rs.getString("CName")%></option>
-                                             <%                                        }
-                                            } catch (Exception ex) {
-                                                ex.printStackTrace();
-                                            }
-
+                                        <option value="<%=rs.getString("id")%>" data-district="<%=cDist%>" data-panchayat="<%=cPid%>"><%=rs.getString("CName")%><% if(!cPanch.isEmpty()){ %> - <%=cPanch%><% } %><% if(!cDist.isEmpty()){ %> (<%=cDist%>)<% } %></option>
+                                        <%      }
+                                            } catch (Exception ex) { ex.printStackTrace(); }
                                         %>
-                                        </optgroup>
-                                       
                                     </select>
                                 </div>
                             </div>
@@ -173,7 +217,7 @@
                             <div class="row">
 
                                 <center><div class="form-group col-md-12">
-                                        <button type="submit" class="btn btn-primary">select</button>
+                                        <button type="submit" class="btn btn-primary">Select</button>
                                     </div></center>
 
                             </div>
@@ -270,6 +314,35 @@
 
         <!-- Template main javascript -->
         <script src="assets/js/main.js"></script>
+        <script>
+            function filterCharities() {
+                var dist = document.getElementById('districtFilter').value;
+                var panch = document.getElementById('panchayatFilter').value;
+                var charSel = document.getElementById('charitySelect');
+                var panchSel = document.getElementById('panchayatFilter');
+
+                // Filter panchayat dropdown by district
+                for (var i = 1; i < panchSel.options.length; i++) {
+                    var od = panchSel.options[i].getAttribute('data-district');
+                    panchSel.options[i].style.display = (!dist || od === dist) ? '' : 'none';
+                }
+                // Reset panchayat if hidden
+                if (panchSel.selectedIndex > 0 && panchSel.options[panchSel.selectedIndex].style.display === 'none') {
+                    panchSel.value = '';
+                    panch = '';
+                }
+
+                // Filter charity dropdown by district & panchayat
+                charSel.value = '';
+                for (var j = 1; j < charSel.options.length; j++) {
+                    var cd = charSel.options[j].getAttribute('data-district');
+                    var cp = charSel.options[j].getAttribute('data-panchayat');
+                    var distMatch = (!dist || cd === dist);
+                    var panchMatch = (!panch || cp === panch);
+                    charSel.options[j].style.display = (distMatch && panchMatch) ? '' : 'none';
+                }
+            }
+        </script>
     </body>
 </html>
 

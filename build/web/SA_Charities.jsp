@@ -4,11 +4,13 @@
             <%@page import="DonationTracking.SQLconnection" %>
                 <% ArrayList rows=new ArrayList(); String errMsg=null; Connection con=null; try {
                     con=SQLconnection.getconnection(); if (con !=null) { Statement st=con.createStatement(); String
-                    sql="SELECT c.*, p.panchayat_name FROM charity_reg c "
+                    sql="SELECT c.*, p.panchayat_name, p.district FROM charity_reg c "
                     + "LEFT JOIN panchayat p ON c.panchayat_id = p.id " + "ORDER BY c.id DESC" ; ResultSet
                     rs=st.executeQuery(sql); while (rs.next()) { String[] r=new String[9]; r[0]=rs.getString("id");
                     r[1]=rs.getString("CName"); r[2]=rs.getString("CMailid"); r[3]=rs.getString("CPhone");
-                    r[4]=rs.getString("Caddress"); r[5]=rs.getString("panchayat_name"); if (r[5]==null) r[5]="N/A" ;
+                    r[4]=rs.getString("Caddress"); r[5]=rs.getString("panchayat_name");
+                    String _dist=""; try{ _dist=rs.getString("district"); }catch(Exception _e){}
+                    if (r[5]==null) r[5]="N/A"; else if(_dist!=null && !_dist.isEmpty()) r[5]=r[5]+" ("+_dist+")";
                     r[6]=rs.getString("CTor"); try { r[7]=rs.getString("min_donation") + " (" +
                     rs.getString("min_donation_type") + ")" ; r[8]=rs.getString("max_donation") + " (" +
                     rs.getString("max_donation_type") + ")" ; } catch(Exception e2) { r[7]="N/A" ; r[8]="N/A" ; }

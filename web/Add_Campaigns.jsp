@@ -1,4 +1,4 @@
-<%-- Document : Add_Campaigns Created on : Nov 18, 2022, 10:22:45 PM Author : Murthi --%>
+<%-- Document : Add_Campaigns Created on : Nov 18, 2022, 10:22:45 PM Author :  --%>
     <%@page contentType="text/html" pageEncoding="UTF-8" %>
         <!DOCTYPE html>
         <html class="no-js">

@@ -9,6 +9,7 @@
                 Statement st = con.createStatement();
                 String table = "";
                 String redirectPage = "";
+                String idColumn = "id";
 
                 if (type.equals("donor")) {
                 table = "donor_reg";
@@ -19,6 +20,20 @@
                 } else if (type.equals("campaign")) {
                 table = "campaign";
                 redirectPage = "SA_Campaigns.jsp";
+                } else if (type.equals("donation")) {
+                table = "transaction";
+                redirectPage = "SA_Donations.jsp";
+                idColumn = "Tid";
+                } else if (type.equals("transaction")) {
+                table = "transaction";
+                redirectPage = "SA_Transactions.jsp";
+                idColumn = "Tid";
+                } else if (type.equals("panchayat")) {
+                table = "panchayat";
+                redirectPage = "Manage_Panchayats.jsp";
+                } else if (type.equals("admin")) {
+                table = "admin_reg";
+                redirectPage = "Manage_Admins.jsp";
                 }
 
                 if (!table.isEmpty()) {
@@ -28,8 +43,8 @@
                 // Bulk Delete
                 String idList = "";
                 for (int k = 0; k < ids.length; k++) { idList +=ids[k]; if (k < ids.length - 1) { idList +="," ; } }
-                    sql="DELETE FROM " + table + " WHERE id IN (" + idList + ")" ; } else { // Single Delete
-                    sql="DELETE FROM " + table + " WHERE id=" + id; } int i=st.executeUpdate(sql); if (i> 0) {
+                    sql="DELETE FROM " + table + " WHERE " + idColumn + " IN (" + idList + ")" ; } else { // Single Delete
+                    sql="DELETE FROM " + table + " WHERE " + idColumn + "=" + id; } int i=st.executeUpdate(sql); if (i> 0) {
                     response.sendRedirect(redirectPage + "?deleted=true");
                     } else {
                     response.sendRedirect(redirectPage + "?deleted=false");

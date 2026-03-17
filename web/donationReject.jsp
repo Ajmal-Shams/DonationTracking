@@ -1,4 +1,4 @@
-<%-- Document : donationReject Created on : Nov 22, 2022, 9:55:31 AM Author : Murthi --%>
+<%-- Document : donationReject Created on : Nov 22, 2022, 9:55:31 AM Author :  --%>
 
     <%@page import="java.sql.ResultSet" %>
         <%@page import="java.sql.Statement" %>

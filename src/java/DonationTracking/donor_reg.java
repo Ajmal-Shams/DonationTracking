@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package DonationTracking;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,21 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author Murthi
- */
 public class donor_reg extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request  servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -43,16 +26,43 @@ public class donor_reg extends HttpServlet {
                 String pass = request.getParameter("pass");
                 String phone = request.getParameter("phone");
                 String address = request.getParameter("address");
-                String panchayatId = request.getParameter("panchayat_id");
+                String district = request.getParameter("district");
+                String panchayatName = request.getParameter("panchayat_name");
                 String AccStatus = "Active";
                 String Name = fname + " " + lname;
 
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 Date date = new Date();
                 String time = dateFormat.format(date);
-                System.out.println("current Date " + time);
+
                 Connection con = SQLconnection.getconnection();
-                java.sql.PreparedStatement ps = con.prepareStatement(
+
+                // Look up panchayat_id from district + panchayat_name
+                int panchayatId = 0;
+                if (panchayatName != null && !panchayatName.isEmpty()) {
+                    PreparedStatement psLookup = con.prepareStatement(
+                            "SELECT id FROM panchayat WHERE district = ? AND panchayat_name = ?");
+                    psLookup.setString(1, district != null ? district : "");
+                    psLookup.setString(2, panchayatName);
+                    ResultSet rsLookup = psLookup.executeQuery();
+                    if (rsLookup.next()) {
+                        panchayatId = rsLookup.getInt("id");
+                    } else {
+                        // Auto-insert if not found
+                        PreparedStatement psInsert = con.prepareStatement(
+                                "INSERT INTO panchayat (district, panchayat_name) VALUES (?, ?)",
+                                PreparedStatement.RETURN_GENERATED_KEYS);
+                        psInsert.setString(1, district != null ? district : "");
+                        psInsert.setString(2, panchayatName);
+                        psInsert.executeUpdate();
+                        ResultSet keys = psInsert.getGeneratedKeys();
+                        if (keys.next()) {
+                            panchayatId = keys.getInt(1);
+                        }
+                    }
+                }
+
+                PreparedStatement ps = con.prepareStatement(
                         "INSERT INTO donor_reg(Name, Mailid, Phone, address, Tor, AccStatus, Password, panchayat_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                 ps.setString(1, Name);
                 ps.setString(2, email);
@@ -61,7 +71,7 @@ public class donor_reg extends HttpServlet {
                 ps.setString(5, time);
                 ps.setString(6, AccStatus);
                 ps.setString(7, pass);
-                ps.setInt(8, Integer.parseInt(panchayatId));
+                ps.setInt(8, panchayatId);
                 int i = ps.executeUpdate();
                 if (i != 0) {
                     response.sendRedirect("Donor.jsp?Donor_success");
@@ -69,50 +79,25 @@ public class donor_reg extends HttpServlet {
                     response.sendRedirect("Donor.jsp?Donor_failed");
                 }
             } catch (Exception e) {
-            } finally {
-                out.close();
+                e.printStackTrace();
             }
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
-    // + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request  servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request  servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

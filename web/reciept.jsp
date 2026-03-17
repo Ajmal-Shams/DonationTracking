@@ -1,7 +1,7 @@
 <%-- 
     Document   : reciept
     Created on : Nov 21, 2022, 11:46:07 AM
-    Author     : Murthi
+    Author     : 
 --%>
 
 <%@page import="java.sql.ResultSet"%>

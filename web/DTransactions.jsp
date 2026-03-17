@@ -1,4 +1,4 @@
-<%-- Document : DTransactions Created on : Nov 20, 2022, 10:20:58 PM Author : Murthi --%>
+<%-- Document : DTransactions Created on : Nov 20, 2022, 10:20:58 PM Author :  --%>
     <%@page import="java.sql.ResultSet" %>
         <%@page import="java.sql.Statement" %>
             <%@page import="DonationTracking.SQLconnection" %>

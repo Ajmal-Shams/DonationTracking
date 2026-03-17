@@ -2,10 +2,17 @@
     <%@page import="java.sql.*" %>
         <%@page import="java.util.*" %>
             <%@page import="DonationTracking.SQLconnection" %>
-                <% String q="SELECT * FROM transaction" +" WHERE panchayat_id=?"; ArrayList rows=new ArrayList(); String
-                    errMsg=null; Connection con=null; try{ con=SQLconnection.getconnection(); if(con!=null){ Integer
-                    pId=(Integer)session.getAttribute("panchayat_id"); PreparedStatement ps=con.prepareStatement(q);
-                    ps.setInt(1,pId!=null?pId:0); ResultSet rs=ps.executeQuery(); while(rs.next()){ String[] r=new
+                <% ArrayList rows=new ArrayList(); String errMsg=null; Connection con=null;
+                    try{ con=SQLconnection.getconnection(); if(con!=null){ Integer pId=(Integer)session.getAttribute("panchayat_id");
+                    String q; PreparedStatement ps;
+                    if(pId!=null && pId>0){
+                        q="SELECT t.* FROM transaction t JOIN charity_reg cr ON t.charity_id=cr.id WHERE cr.panchayat_id=? ORDER BY t.Tid DESC";
+                        ps=con.prepareStatement(q); ps.setInt(1,pId);
+                    } else {
+                        q="SELECT * FROM transaction ORDER BY Tid DESC";
+                        ps=con.prepareStatement(q);
+                    }
+                    ResultSet rs=ps.executeQuery(); while(rs.next()){ String[] r=new
                     String[7]; r[0]=rs.getString("Tid"); r[1]=rs.getString("dname"); r[2]=rs.getString("cname");
                     r[3]=rs.getString("campName"); r[4]=rs.getString("payment"); r[5]=rs.getString("amount");
                     r[6]=rs.getString("TofPayement"); rows.add(r); } } }catch(Exception ex){ ex.printStackTrace();

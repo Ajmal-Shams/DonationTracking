@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Murthi
+ * @author 
  */
 public class DonoteReject extends HttpServlet {
 

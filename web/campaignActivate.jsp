@@ -1,7 +1,7 @@
 <%-- 
     Document   : campaignActivate
     Created on : Nov 21, 2022, 1:05:56 PM
-    Author     : Murthi
+    Author     : 
 --%>
 
 <%@page import="java.sql.Statement"%>

@@ -4,11 +4,14 @@
             <%@page import="DonationTracking.SQLconnection" %>
                 <% ArrayList rows=new ArrayList(); String errMsg=null; Connection con=null; try {
                     con=SQLconnection.getconnection(); if (con !=null) { Statement st=con.createStatement(); ResultSet
-                    rs=st.executeQuery( "SELECT t.*, p.panchayat_name FROM transaction t LEFT JOIN panchayat p ON t.panchayat_id = p.id ORDER BY t.id DESC"
+                    rs=st.executeQuery( "SELECT t.*, p.panchayat_name, p.district FROM transaction t LEFT JOIN panchayat p ON t.panchayat_id = p.id ORDER BY t.id DESC"
                     ); while (rs.next()) { String[] r=new String[9]; r[0]=rs.getString("Tid");
                     r[1]=rs.getString("dname"); r[2]=rs.getString("cname"); r[3]=rs.getString("campName");
                     r[4]=rs.getString("amount"); r[5]=rs.getString("payment"); r[6]=rs.getString("donationStatus");
-                    r[7]=rs.getString("panchayat_name"); if (r[7]==null) r[7]="N/A" ; r[8]=rs.getString("TofPayement");
+                    r[7]=rs.getString("panchayat_name");
+                    String _dist=""; try{ _dist=rs.getString("district"); }catch(Exception _e){}
+                    if (r[7]==null) r[7]="N/A"; else if(_dist!=null && !_dist.isEmpty()) r[7]=r[7]+" ("+_dist+")";
+                    r[8]=rs.getString("TofPayement");
                     rows.add(r); } } } catch (Exception ex) { ex.printStackTrace(); errMsg=ex.getMessage(); } %>
                     <!DOCTYPE html>
                     <html class="no-js">
@@ -24,6 +27,14 @@
                         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
                         <link rel="stylesheet" href="assets/css/font-awesome.min.css">
                         <link rel="stylesheet" href="assets/css/style.css">
+                        <script>
+                            function toggle(source) {
+                                checkboxes = document.getElementsByName('ids');
+                                for (var i = 0, n = checkboxes.length; i < n; i++) {
+                                    checkboxes[i].checked = source.checked;
+                                }
+                            }
+                        </script>
                     </head>
 
                     <body>
@@ -78,9 +89,19 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <table class="table table-bordered table-striped">
+                                        <h4 class="pull-right">Total Transactions: <strong>
+                                                <%=rows.size()%>
+                                            </strong></h4>
+                                        <form action="delete_entity.jsp" method="post"
+                                            onsubmit="return confirm('Are you sure you want to delete selected transactions?');">
+                                            <input type="hidden" name="type" value="transaction">
+                                            <button type="submit" class="btn btn-danger"
+                                                style="margin-bottom: 10px;">Delete Selected</button>
+
+                                            <table class="table table-bordered table-striped">
                                             <thead>
                                                 <tr>
+                                                    <th><input type="checkbox" onClick="toggle(this)"></th>
                                                     <th>Transaction ID</th>
                                                     <th>Donor</th>
                                                     <th>Charity</th>
@@ -90,18 +111,21 @@
                                                     <th>Status</th>
                                                     <th>Panchayat</th>
                                                     <th>Date</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <% if (errMsg !=null) { %>
                                                     <tr>
-                                                        <td colspan="9">Error: <%=errMsg%>
+                                                        <td colspan="11">Error: <%=errMsg%>
                                                         </td>
                                                     </tr>
                                                     <% } else { %>
                                                         <% for (int i=0; i < rows.size(); i++) { %>
                                                             <% String[] r=(String[])rows.get(i); %>
                                                                 <tr>
+                                                                    <td><input type="checkbox" name="ids"
+                                                                            value="<%=r[0]%>"></td>
                                                                     <td>
                                                                         <%=r[0]%>
                                                                     </td>
@@ -129,11 +153,17 @@
                                                                     <td>
                                                                         <%=r[8]%>
                                                                     </td>
+                                                                    <td>
+                                                                        <a href="delete_entity.jsp?type=transaction&id=<%=r[0]%>"
+                                                                            class="btn btn-danger btn-xs"
+                                                                            onclick="return confirm('Delete this transaction?')">Delete</a>
+                                                                    </td>
                                                                 </tr>
                                                                 <% } %>
                                                                     <% } %>
                                             </tbody>
                                         </table>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

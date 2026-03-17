@@ -4,7 +4,7 @@
             <%@page import="DonationTracking.SQLconnection" %>
                 <% String[] h={ "id" , "campName" , "CampDes" , "Amount" , "AmountCol" , "CampStatus" , "cname"
                     , "panchayat_name" , "StartDate" , "EndDate" , "N/A"
-                    , "SELECT\u0020c.*,\u0020p.panchayat_name\u0020FROM\u0020campaign\u0020c\u0020"
+                    , "SELECT\u0020c.*,\u0020p.panchayat_name,\u0020p.district\u0020FROM\u0020campaign\u0020c\u0020"
                     , "LEFT\u0020JOIN\u0020panchayat\u0020p\u0020ON\u0020c.panchayat_id\u0020=\u0020p.id\u0020"
                     , "ORDER\u0020BY\u0020c.id\u0020DESC"
                     , "\u003cb\u0020style='color:red;'\u003eLOCKED\u0020(Goal\u0020Reached)\u003c/b\u003e" }; ArrayList
@@ -13,7 +13,9 @@
                     st=con.createStatement(); java.sql.ResultSet rs=st.executeQuery(h[11] + h[12] + h[13]); while
                     (rs.next()) { String[] r=new String[12]; r[0]=rs.getString(h[0]); r[1]=rs.getString(h[1]);
                     r[2]=rs.getString(h[2]); r[3]=rs.getString(h[3]); r[4]=rs.getString(h[4]); r[5]=rs.getString(h[5]);
-                    r[6]=rs.getString(h[6]); r[7]=rs.getString(h[7]); if (r[7]==null) r[7]=h[10];
+                    r[6]=rs.getString(h[6]); r[7]=rs.getString(h[7]);
+                    String _dist=""; try{ _dist=rs.getString("district"); }catch(Exception _e){}
+                    if (r[7]==null) r[7]=h[10]; else if(_dist!=null && !_dist.isEmpty()) r[7]=r[7]+" ("+_dist+")";
                     r[8]=rs.getString(h[8]); r[9]=rs.getString(h[9]); try { r[10]=rs.getString("min_donation") + " (" +
                     rs.getString("min_donation_type") + ")" ; r[11]=rs.getString("max_donation") + " (" +
                     rs.getString("max_donation_type") + ")" ; } catch(Exception e2) { r[10]=h[10]; r[11]=h[10]; }

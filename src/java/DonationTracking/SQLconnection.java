@@ -7,7 +7,7 @@ package DonationTracking;
 
 /**
  *
- * @author Murthi
+ * @author 
  */
 import java.sql.Connection;
 import java.sql.DriverManager;

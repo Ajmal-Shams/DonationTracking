@@ -1,7 +1,7 @@
 <%-- 
     Document   : campaignReject
     Created on : Nov 21, 2022, 1:21:57 PM
-    Author     : Murthi
+    Author     : 
 --%>
 <%@page import="java.sql.Statement"%>
 <%@page import="DonationTracking.SQLconnection"%>

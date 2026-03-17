@@ -1,4 +1,4 @@
-<%-- Document : donatePage Created on : Nov 19, 2022, 9:00:13 PM Author : Murthi --%>
+<%-- Document : donatePage Created on : Nov 19, 2022, 9:00:13 PM Author :  --%>
 
     <%@page import="java.sql.ResultSet" %>
         <%@page import="java.sql.Statement" %>
