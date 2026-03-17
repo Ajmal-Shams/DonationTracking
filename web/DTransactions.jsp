@@ -166,7 +166,7 @@
                                 while (rs.next()) {
                         %>
                         <tr>
-                            <td ><%=rs.getString(" Tid")%>
+                            <td><%=rs.getString("Tid")%>
                                                 </td>
                                                 <td>
                                                     <%=rs.getString("cname")%>
@@ -183,7 +183,7 @@
                                                 <td>
                                                     <%=rs.getString("TofPayement")%>
                                                 </td>
-                                                <td><a href="reciept.jsp?id=<%=rs.getString(" id")%>" class="btn
+                                                <td><a href="reciept.jsp?id=<%=rs.getString("id")%>" class="btn
                                                         btn-success" style="color: white">Generate Receipt</a></td>
                                                 <% } } catch (Exception ex) { ex.printStackTrace(); } finally { if (rs
                                                     !=null) rs.close(); if (st !=null) st.close(); if (con !=null)
